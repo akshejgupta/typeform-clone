@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --tf-ink: #191919;
+  --tf-muted: #737373;
+  --tf-line: #e6e6e4;
+  --tf-wash: #f6f5f1;
+  --tf-paper: #ffffff;
+  --tf-accent: #0445af;
+  --tf-ok: #191919;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--tf-wash);
+  color: var(--tf-ink);
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: #cde0ff;
+}
+
+.tf-progress {
+  height: 4px;
+  background: #ececec;
+}
+
+.tf-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--tf-accent);
+  transition: width 280ms ease;
+}
+
+.tf-underline {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid #cfcfcf;
+  background: transparent;
+  padding: 10px 0;
+  outline: none;
+  font-size: 1.35rem;
+  color: var(--tf-ink);
+}
+
+.tf-underline:focus {
+  border-bottom-color: var(--tf-ink);
+}
+
+.tf-ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--tf-ok);
+  color: white;
+  border: 0;
+  border-radius: 4px;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tf-ok:hover {
+  filter: brightness(1.15);
+}
+
+.tf-ok:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
