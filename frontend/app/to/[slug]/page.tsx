@@ -19,6 +19,7 @@ import type { AnswerPayload, FormDetail, Question } from "@/lib/types";
 import { kindMeta } from "@/lib/questions";
 import { validateAnswer, toSubmitPayload } from "@/lib/validation";
 import { Wordmark } from "@/components/wordmark";
+import { ThemeToggle } from "@/components/theme";
 
 export default function PublicFillPage() {
   const params = useParams();
@@ -313,9 +314,9 @@ export default function PublicFillPage() {
       : 0;
 
   return (
-    <div className="min-h-screen w-screen bg-[#faf9f6] text-[#191919] flex flex-col justify-between relative overflow-hidden font-sans select-none">
+    <div className="min-h-screen w-full bg-[#faf9f6] dark:bg-[#0c0a09] text-[#191919] dark:text-[#f3f4f6] flex flex-col justify-between relative overflow-y-auto font-sans">
       {/* Top Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-[#e6e6e4] z-50">
+      <div className="fixed top-0 left-0 right-0 h-1 bg-[#e6e6e4] dark:bg-[#24211e] z-50">
         <div
           style={{ width: `${progressPercent}%`, backgroundColor: accent }}
           className="h-full transition-all duration-300 ease-out"
@@ -323,12 +324,17 @@ export default function PublicFillPage() {
       </div>
 
       {/* Brand Header */}
-      <header className="fixed top-3 left-6 z-40 flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-        <Wordmark className="text-sm" />
+      <header className="fixed top-3 left-6 right-6 z-40 flex items-center justify-between pointer-events-none">
+        <div className="pointer-events-auto opacity-80 hover:opacity-100 transition-opacity">
+          <Wordmark className="text-sm" />
+        </div>
+        <div className="pointer-events-auto">
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Main Slide Carousel Area */}
-      <main className="flex-1 flex items-center justify-center px-6 py-16 relative">
+      <main className="flex-1 flex items-center justify-center px-6 py-16 relative w-full">
         <div className="w-full max-w-xl mx-auto">
           <AnimatePresence mode="wait" custom={direction}>
             {/* Step 0: Welcome Screen */}
@@ -347,11 +353,11 @@ export default function PublicFillPage() {
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-6"
               >
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-[#191919] tracking-tight leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-[#191919] dark:text-white tracking-tight leading-tight">
                   {form.welcome_title || "Welcome"}
                 </h1>
                 {form.welcome_message && (
-                  <p className="text-base sm:text-lg text-[#666] leading-relaxed font-normal">
+                  <p className="text-base sm:text-lg text-[#666] dark:text-[#a8a29e] leading-relaxed font-normal">
                     {form.welcome_message}
                   </p>
                 )}
@@ -365,8 +371,8 @@ export default function PublicFillPage() {
                     <span>Start</span>
                     <ArrowRight size={16} />
                   </button>
-                  <span className="text-xs text-[#737373] hidden sm:inline">
-                    press <strong className="font-semibold text-[#191919]">Enter ↵</strong>
+                  <span className="text-xs text-[#737373] dark:text-[#a8a29e] hidden sm:inline">
+                    press <strong className="font-semibold text-[#191919] dark:text-white">Enter ↵</strong>
                   </span>
                 </div>
               </motion.div>
@@ -396,7 +402,7 @@ export default function PublicFillPage() {
 
                 {/* Question Prompt */}
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[#191919] leading-tight">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#191919] dark:text-white leading-tight">
                     {currentQuestion.prompt || kindMeta(currentQuestion.kind).defaultPrompt}
                     {currentQuestion.required && (
                       <span className="text-[#dc2626] ml-1.5" title="Required">
@@ -405,7 +411,7 @@ export default function PublicFillPage() {
                     )}
                   </h2>
                   {currentQuestion.help_text && (
-                    <p className="text-sm text-[#737373] mt-1.5 leading-relaxed">
+                    <p className="text-sm text-[#737373] dark:text-[#a8a29e] mt-1.5 leading-relaxed">
                       {currentQuestion.help_text}
                     </p>
                   )}
@@ -429,7 +435,7 @@ export default function PublicFillPage() {
                         })
                       }
                       placeholder={currentQuestion.placeholder || "Type your answer here..."}
-                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] focus:border-[#191919] py-2 text-xl sm:text-2xl text-[#191919] placeholder:text-[#999] focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] dark:border-[#383330] focus:border-[#191919] dark:focus:border-white py-2 text-xl sm:text-2xl text-[#191919] dark:text-white placeholder:text-[#999] dark:placeholder:text-[#666] focus:outline-none transition-colors"
                     />
                   )}
 
@@ -449,7 +455,7 @@ export default function PublicFillPage() {
                         })
                       }
                       placeholder={currentQuestion.placeholder || "name@example.com"}
-                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] focus:border-[#191919] py-2 text-xl sm:text-2xl text-[#191919] placeholder:text-[#999] focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] dark:border-[#383330] focus:border-[#191919] dark:focus:border-white py-2 text-xl sm:text-2xl text-[#191919] dark:text-white placeholder:text-[#999] dark:placeholder:text-[#666] focus:outline-none transition-colors"
                     />
                   )}
 
@@ -469,7 +475,7 @@ export default function PublicFillPage() {
                         })
                       }
                       placeholder={currentQuestion.placeholder || "Type a number..."}
-                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] focus:border-[#191919] py-2 text-xl sm:text-2xl text-[#191919] placeholder:text-[#999] focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] dark:border-[#383330] focus:border-[#191919] dark:focus:border-white py-2 text-xl sm:text-2xl text-[#191919] dark:text-white placeholder:text-[#999] dark:placeholder:text-[#666] focus:outline-none transition-colors"
                     />
                   )}
 
@@ -489,7 +495,7 @@ export default function PublicFillPage() {
                         })
                       }
                       placeholder={currentQuestion.placeholder || "Type your answer here..."}
-                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] focus:border-[#191919] py-2 text-lg sm:text-xl text-[#191919] placeholder:text-[#999] focus:outline-none resize-none transition-colors"
+                      className="w-full bg-transparent border-b-2 border-[#cfcfcf] dark:border-[#383330] focus:border-[#191919] dark:focus:border-white py-2 text-lg sm:text-xl text-[#191919] dark:text-white placeholder:text-[#999] dark:placeholder:text-[#666] focus:outline-none resize-none transition-colors"
                     />
                   )}
 
@@ -508,21 +514,21 @@ export default function PublicFillPage() {
                             onClick={() => handleSelectChoice(currentQuestion, choice.id)}
                             className={`w-full p-3.5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                               isSelected
-                                ? "border-[#191919] bg-white shadow-sm ring-1 ring-[#191919]"
-                                : "border-[#e6e6e4] bg-white/70 hover:bg-white hover:border-[#191919]"
+                                ? "border-[#191919] dark:border-white bg-white dark:bg-[#1a1816] shadow-sm ring-1 ring-[#191919] dark:ring-white"
+                                : "border-[#e6e6e4] dark:border-[#2e2a27] bg-white/70 dark:bg-[#141414] hover:bg-white dark:hover:bg-[#1a1816] hover:border-[#191919] dark:hover:border-[#78716c]"
                             }`}
                           >
                             <div className="flex items-center gap-3">
                               <span
                                 className={`w-7 h-7 rounded-lg border flex items-center justify-center text-xs font-bold transition-colors ${
                                   isSelected
-                                    ? "bg-[#191919] text-white border-[#191919]"
-                                    : "bg-white border-[#dcdcd8] text-[#191919]"
+                                    ? "bg-[#191919] text-white border-[#191919] dark:bg-white dark:text-[#191919] dark:border-white"
+                                    : "bg-white dark:bg-[#201e1d] border-[#dcdcd8] dark:border-[#383330] text-[#191919] dark:text-white"
                                 }`}
                               >
                                 {letter}
                               </span>
-                              <span className="text-base font-medium text-[#191919]">
+                              <span className="text-base font-medium text-[#191919] dark:text-white">
                                 {choice.label}
                               </span>
                             </div>
@@ -542,7 +548,7 @@ export default function PublicFillPage() {
                       <select
                         value={answers[currentQuestion.id]?.choice_id || ""}
                         onChange={(e) => handleSelectChoice(currentQuestion, e.target.value)}
-                        className="w-full p-3.5 bg-white border border-[#cfcfcf] focus:border-[#191919] rounded-xl text-base text-[#191919] focus:outline-none cursor-pointer appearance-none pr-10"
+                        className="w-full p-3.5 bg-white dark:bg-[#141414] border border-[#cfcfcf] dark:border-[#2e2a27] focus:border-[#191919] dark:focus:border-white rounded-xl text-base text-[#191919] dark:text-white focus:outline-none cursor-pointer appearance-none pr-10"
                       >
                         <option value="">Select an option...</option>
                         {currentQuestion.choices.map((choice) => (
@@ -553,7 +559,7 @@ export default function PublicFillPage() {
                       </select>
                       <ChevronDown
                         size={18}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#737373] pointer-events-none"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#737373] dark:text-[#a8a29e] pointer-events-none"
                       />
                     </div>
                   )}
@@ -575,15 +581,15 @@ export default function PublicFillPage() {
                             onClick={() => handleSelectYesNo(currentQuestion, item.value)}
                             className={`flex-1 p-5 rounded-2xl border flex items-center justify-center gap-3 font-bold text-base transition-all cursor-pointer ${
                               isSelected
-                                ? "border-[#191919] bg-white shadow-sm ring-1 ring-[#191919]"
-                                : "border-[#e6e6e4] bg-white/70 hover:bg-white hover:border-[#191919]"
+                                ? "border-[#191919] dark:border-white bg-white dark:bg-[#1a1816] shadow-sm ring-1 ring-[#191919] dark:ring-white text-[#191919] dark:text-white"
+                                : "border-[#e6e6e4] dark:border-[#2e2a27] bg-white/70 dark:bg-[#141414] hover:bg-white dark:hover:bg-[#1a1816] hover:border-[#191919] dark:hover:border-[#78716c] text-[#191919] dark:text-white"
                             }`}
                           >
                             <span
                               className={`w-7 h-7 rounded-lg border flex items-center justify-center text-xs font-bold ${
                                 isSelected
-                                  ? "bg-[#191919] text-white border-[#191919]"
-                                  : "bg-white border-[#dcdcd8] text-[#191919]"
+                                  ? "bg-[#191919] text-white border-[#191919] dark:bg-white dark:text-[#191919]"
+                                  : "bg-white dark:bg-[#201e1d] border-[#dcdcd8] dark:border-[#383330] text-[#191919] dark:text-white"
                               }`}
                             >
                               {item.key}
@@ -610,8 +616,8 @@ export default function PublicFillPage() {
                             onClick={() => handleSelectRating(currentQuestion, score)}
                             className={`w-12 sm:w-14 h-12 sm:h-14 rounded-2xl border flex items-center justify-center font-bold text-base sm:text-lg cursor-pointer transition-all ${
                               isSelected
-                                ? "bg-[#191919] text-white border-[#191919] shadow-md scale-105"
-                                : "border-[#dcdcd8] bg-white/70 hover:border-[#191919] hover:bg-white"
+                                ? "bg-[#191919] text-white border-[#191919] dark:bg-white dark:text-[#191919] dark:border-white shadow-md scale-105"
+                                : "border-[#dcdcd8] dark:border-[#2e2a27] bg-white/70 dark:bg-[#141414] hover:border-[#191919] dark:hover:border-[#78716c] hover:bg-white dark:hover:bg-[#1a1816] text-[#191919] dark:text-white"
                             }`}
                           >
                             {score}
@@ -624,7 +630,7 @@ export default function PublicFillPage() {
 
                 {/* Validation Error Notice */}
                 {validationError && (
-                  <div className="flex items-center gap-2 text-xs font-semibold text-[#dc2626] bg-[#fee2e2] px-3 py-2 rounded-lg max-w-fit animate-shake">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#dc2626] dark:text-rose-400 bg-[#fee2e2] dark:bg-rose-950/50 px-3 py-2 rounded-lg max-w-fit animate-shake">
                     <AlertCircle size={14} />
                     <span>{validationError}</span>
                   </div>
@@ -641,8 +647,8 @@ export default function PublicFillPage() {
                     <span>{step === totalQuestions ? "Submit" : "OK"}</span>
                     <Check size={16} />
                   </button>
-                  <span className="text-xs text-[#737373] hidden sm:inline">
-                    press <strong className="font-semibold text-[#191919]">Enter ↵</strong>
+                  <span className="text-xs text-[#737373] dark:text-[#a8a29e] hidden sm:inline">
+                    press <strong className="font-semibold text-[#191919] dark:text-white">Enter ↵</strong>
                   </span>
                 </div>
               </motion.div>
@@ -663,16 +669,16 @@ export default function PublicFillPage() {
               >
                 <div
                   style={{ color: accent }}
-                  className="w-20 h-20 rounded-full bg-white shadow-md flex items-center justify-center mx-auto"
+                  className="w-20 h-20 rounded-full bg-white dark:bg-[#161514] shadow-md flex items-center justify-center mx-auto"
                 >
                   <CheckCircle2 size={44} />
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-[#191919] tracking-tight">
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-[#191919] dark:text-white tracking-tight">
                   {submissionResult?.thank_you_title || form.thank_you_title || "Thank you!"}
                 </h1>
 
-                <p className="text-base text-[#666] leading-relaxed">
+                <p className="text-base text-[#666] dark:text-[#a8a29e] leading-relaxed">
                   {submissionResult?.thank_you_message ||
                     form.thank_you_message ||
                     "Your response has been submitted."}
@@ -686,14 +692,14 @@ export default function PublicFillPage() {
                       setAnswers({});
                       setStep(form.welcome_title || form.welcome_message ? 0 : 1);
                     }}
-                    className="px-5 py-2.5 rounded-xl border border-[#dcdcd8] bg-white hover:bg-[#f6f5f1] text-xs font-semibold text-[#191919] flex items-center gap-2 transition-colors cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl border border-[#dcdcd8] dark:border-[#2e2a27] bg-white dark:bg-[#141414] hover:bg-[#f6f5f1] dark:hover:bg-[#1f1d1a] text-xs font-semibold text-[#191919] dark:text-white flex items-center gap-2 transition-colors cursor-pointer"
                   >
                     <RotateCcw size={14} />
                     <span>Submit another response</span>
                   </button>
                   <Link
                     href="/"
-                    className="px-5 py-2.5 rounded-xl bg-[#191919] text-white text-xs font-semibold hover:bg-[#333] transition-colors"
+                    className="px-5 py-2.5 rounded-xl bg-[#191919] text-white dark:bg-white dark:text-[#191919] text-xs font-semibold hover:bg-[#333] dark:hover:bg-[#e6e6e4] transition-colors"
                   >
                     Create your own typeform
                   </Link>
@@ -708,20 +714,20 @@ export default function PublicFillPage() {
       <footer className="fixed bottom-4 right-6 z-40 flex items-center gap-3">
         {/* Navigation Arrows */}
         {!submitted && (
-          <div className="flex items-center bg-white border border-[#e6e6e4] rounded-xl shadow-xs overflow-hidden">
+          <div className="flex items-center bg-white dark:bg-[#161514] border border-[#e6e6e4] dark:border-[#292524] rounded-xl shadow-xs overflow-hidden">
             <button
               onClick={handleBack}
               disabled={step <= 0 || (step === 1 && !form.welcome_title && !form.welcome_message)}
-              className="p-2.5 text-[#555] hover:text-[#191919] hover:bg-[#f6f5f1] disabled:opacity-25 transition-colors cursor-pointer"
+              className="p-2.5 text-[#555] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white hover:bg-[#f6f5f1] dark:hover:bg-[#201e1d] disabled:opacity-25 transition-colors cursor-pointer"
               title="Previous question (↑)"
             >
               <ChevronUp size={16} />
             </button>
-            <div className="w-[1px] h-5 bg-[#e6e6e4]" />
+            <div className="w-[1px] h-5 bg-[#e6e6e4] dark:bg-[#292524]" />
             <button
               onClick={() => handleAdvance()}
               disabled={step > totalQuestions}
-              className="p-2.5 text-[#555] hover:text-[#191919] hover:bg-[#f6f5f1] disabled:opacity-25 transition-colors cursor-pointer"
+              className="p-2.5 text-[#555] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white hover:bg-[#f6f5f1] dark:hover:bg-[#201e1d] disabled:opacity-25 transition-colors cursor-pointer"
               title="Next question (↓ or Enter)"
             >
               <ChevronDown size={16} />
@@ -734,7 +740,7 @@ export default function PublicFillPage() {
           href="/"
           target="_blank"
           rel="noreferrer"
-          className="bg-[#191919] text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm hover:bg-[#333] transition-colors"
+          className="bg-[#191919] dark:bg-[#1c1a17] text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm hover:bg-[#333] dark:hover:bg-[#282522] border border-transparent dark:border-[#2e2a27] transition-colors"
         >
           <span>Powered by</span>
           <span className="font-bold">Typeform</span>

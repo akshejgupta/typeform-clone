@@ -14,3 +14,4 @@ frontend/out/
 frontend/next-env.d.ts
 .idea/
 .vscode/
+.neon

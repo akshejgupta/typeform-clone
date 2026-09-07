@@ -25,6 +25,7 @@ import type {
 } from "@/lib/types";
 import { kindMeta } from "@/lib/questions";
 import { useToast } from "@/components/toast";
+import { ThemeToggle } from "@/components/theme";
 
 export default function FormResultsPage() {
   const params = useParams();
@@ -145,34 +146,34 @@ export default function FormResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#191919] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#faf9f6] dark:bg-[#0c0a09] text-[#191919] dark:text-[#f3f4f6] flex flex-col font-sans">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-30 bg-white border-b border-[#e6e6e4] px-6 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-30 bg-white dark:bg-[#141414] border-b border-[#e6e6e4] dark:border-[#292524] px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
             href={`/forms/${form.id}`}
-            className="p-1.5 rounded-lg text-[#737373] hover:text-[#191919] hover:bg-[#f6f5f1] transition-colors"
+            className="p-1.5 rounded-lg text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white hover:bg-[#f6f5f1] dark:hover:bg-[#201e1d] transition-colors"
             title="Back to builder"
           >
             <ArrowLeft size={18} />
           </Link>
 
-          <div className="h-4 w-[1px] bg-[#e6e6e4]" />
+          <div className="h-4 w-[1px] bg-[#e6e6e4] dark:bg-[#292524]" />
 
           <div>
-            <div className="text-xs font-semibold text-[#737373]">Results & Analytics</div>
-            <h1 className="text-sm font-bold text-[#191919] line-clamp-1">{form.title}</h1>
+            <div className="text-xs font-semibold text-[#737373] dark:text-[#a8a29e]">Results & Analytics</div>
+            <h1 className="text-sm font-bold text-[#191919] dark:text-white line-clamp-1">{form.title}</h1>
           </div>
         </div>
 
         {/* View Tabs */}
-        <div className="flex items-center gap-1 bg-[#f0f0ee] p-1 rounded-xl text-xs font-semibold">
+        <div className="flex items-center gap-1 bg-[#f0f0ee] dark:bg-[#1f1d1a] p-1 rounded-xl text-xs font-semibold">
           <button
             onClick={() => setActiveTab("summary")}
             className={`px-4 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "summary"
-                ? "bg-white text-[#191919] shadow-xs"
-                : "text-[#737373] hover:text-[#191919]"
+                ? "bg-white dark:bg-[#2a2725] text-[#191919] dark:text-white shadow-xs"
+                : "text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white"
             }`}
           >
             <BarChart2 size={13} />
@@ -182,8 +183,8 @@ export default function FormResultsPage() {
             onClick={() => setActiveTab("responses")}
             className={`px-4 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "responses"
-                ? "bg-white text-[#191919] shadow-xs"
-                : "text-[#737373] hover:text-[#191919]"
+                ? "bg-white dark:bg-[#2a2725] text-[#191919] dark:text-white shadow-xs"
+                : "text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white"
             }`}
           >
             <List size={13} />
@@ -193,9 +194,11 @@ export default function FormResultsPage() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+
           <button
             onClick={handleExportCsv}
-            className="px-3.5 py-1.5 bg-white border border-[#e6e6e4] hover:border-[#191919] text-xs font-semibold text-[#191919] rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="px-3.5 py-1.5 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] hover:border-[#191919] dark:hover:border-[#78716c] text-xs font-semibold text-[#191919] dark:text-white rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
             title="Download CSV"
           >
             <Download size={13} />
@@ -207,7 +210,7 @@ export default function FormResultsPage() {
               href={`/to/${form.public_slug}`}
               target="_blank"
               rel="noreferrer"
-              className="p-2 bg-[#191919] text-white rounded-lg text-xs font-semibold hover:bg-[#333] transition-colors flex items-center gap-1.5"
+              className="p-2 bg-[#191919] text-white rounded-lg text-xs font-semibold hover:bg-[#333] dark:bg-white dark:text-[#191919] dark:hover:bg-[#e6e6e4] transition-colors flex items-center gap-1.5"
             >
               <ExternalLink size={13} />
               <span className="hidden sm:inline">View live form</span>
@@ -220,32 +223,32 @@ export default function FormResultsPage() {
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-8">
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-2xl border border-[#e6e6e4] shadow-xs">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#737373] mb-1">
+          <div className="bg-white dark:bg-[#141414] p-5 rounded-2xl border border-[#e6e6e4] dark:border-[#272421] shadow-xs">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1">
               Total Responses
             </div>
-            <div className="text-3xl font-extrabold text-[#191919]">
+            <div className="text-3xl font-extrabold text-[#191919] dark:text-white">
               {stats?.total_submissions ?? submissions.length}
             </div>
-            <div className="text-[11px] text-[#999] mt-1">All completed submissions</div>
+            <div className="text-[11px] text-[#999] dark:text-[#78716c] mt-1">All completed submissions</div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-[#e6e6e4] shadow-xs">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#737373] mb-1">
+          <div className="bg-white dark:bg-[#141414] p-5 rounded-2xl border border-[#e6e6e4] dark:border-[#272421] shadow-xs">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1">
               Completion Rate
             </div>
-            <div className="text-3xl font-extrabold text-[#137333]">100%</div>
-            <div className="text-[11px] text-[#999] mt-1">All recorded forms completed</div>
+            <div className="text-3xl font-extrabold text-[#137333] dark:text-emerald-400">100%</div>
+            <div className="text-[11px] text-[#999] dark:text-[#78716c] mt-1">All recorded forms completed</div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-[#e6e6e4] shadow-xs">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#737373] mb-1">
+          <div className="bg-white dark:bg-[#141414] p-5 rounded-2xl border border-[#e6e6e4] dark:border-[#272421] shadow-xs">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1">
               Questions
             </div>
-            <div className="text-3xl font-extrabold text-[#191919]">
+            <div className="text-3xl font-extrabold text-[#191919] dark:text-white">
               {form.questions.length}
             </div>
-            <div className="text-[11px] text-[#999] mt-1">Active steps in form</div>
+            <div className="text-[11px] text-[#999] dark:text-[#78716c] mt-1">Active steps in form</div>
           </div>
         </div>
 
@@ -253,8 +256,8 @@ export default function FormResultsPage() {
         {activeTab === "summary" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#191919]">Question Breakdown</h2>
-              <span className="text-xs text-[#737373]">
+              <h2 className="text-lg font-bold text-[#191919] dark:text-white">Question Breakdown</h2>
+              <span className="text-xs text-[#737373] dark:text-[#a8a29e]">
                 Aggregated statistics across {stats?.total_submissions || 0} responses
               </span>
             </div>
@@ -267,24 +270,24 @@ export default function FormResultsPage() {
               return (
                 <div
                   key={qStat.question_id}
-                  className="bg-white rounded-2xl border border-[#e6e6e4] p-6 shadow-xs space-y-4"
+                  className="bg-white dark:bg-[#141414] rounded-2xl border border-[#e6e6e4] dark:border-[#272421] p-6 shadow-xs space-y-4"
                 >
                   {/* Question Header */}
-                  <div className="flex items-start justify-between gap-4 border-b border-[#f0f0ee] pb-4">
+                  <div className="flex items-start justify-between gap-4 border-b border-[#f0f0ee] dark:border-[#252220] pb-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-[#f6f5f1] flex items-center justify-center text-[#191919] shrink-0 mt-0.5">
+                      <div className="w-7 h-7 rounded-lg bg-[#f6f5f1] dark:bg-[#272421] flex items-center justify-center text-[#191919] dark:text-white shrink-0 mt-0.5">
                         <Icon size={14} />
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-[#0445af]">Question {idx + 1}</div>
-                        <h3 className="text-base font-bold text-[#191919] mt-0.5">
+                        <div className="text-xs font-bold text-[#0445af] dark:text-sky-400">Question {idx + 1}</div>
+                        <h3 className="text-base font-bold text-[#191919] dark:text-white mt-0.5">
                           {qStat.prompt || meta?.defaultPrompt}
                         </h3>
                       </div>
                     </div>
 
                     <div className="text-right shrink-0">
-                      <span className="text-xs font-semibold bg-[#f0f0ee] text-[#555] px-2.5 py-1 rounded-full">
+                      <span className="text-xs font-semibold bg-[#f0f0ee] dark:bg-[#24211e] text-[#555] dark:text-[#d6d3d1] px-2.5 py-1 rounded-full">
                         {qStat.response_count} {qStat.response_count === 1 ? "answer" : "answers"}
                       </span>
                     </div>
@@ -302,12 +305,12 @@ export default function FormResultsPage() {
                           return (
                             <div key={item.label} className="space-y-1">
                               <div className="flex items-center justify-between text-xs font-medium">
-                                <span className="text-[#191919]">{item.label}</span>
-                                <span className="text-[#737373]">
+                                <span className="text-[#191919] dark:text-white">{item.label}</span>
+                                <span className="text-[#737373] dark:text-[#a8a29e]">
                                   {item.count} ({pct}%)
                                 </span>
                               </div>
-                              <div className="h-2.5 bg-[#f0f0ee] rounded-full overflow-hidden">
+                              <div className="h-2.5 bg-[#f0f0ee] dark:bg-[#272421] rounded-full overflow-hidden">
                                 <div
                                   style={{
                                     width: `${pct}%`,
@@ -332,12 +335,12 @@ export default function FormResultsPage() {
                           return (
                             <div key={item.label} className="space-y-1">
                               <div className="flex items-center justify-between text-xs font-medium">
-                                <span className="text-[#191919] font-semibold">{item.label}</span>
-                                <span className="text-[#737373]">
+                                <span className="text-[#191919] dark:text-white font-semibold">{item.label}</span>
+                                <span className="text-[#737373] dark:text-[#a8a29e]">
                                   {item.count} ({pct}%)
                                 </span>
                               </div>
-                              <div className="h-2.5 bg-[#f0f0ee] rounded-full overflow-hidden">
+                              <div className="h-2.5 bg-[#f0f0ee] dark:bg-[#272421] rounded-full overflow-hidden">
                                 <div
                                   style={{
                                     width: `${pct}%`,
@@ -359,14 +362,14 @@ export default function FormResultsPage() {
                     {qStat.kind === "rating" && (
                       <div className="pt-2">
                         <div className="flex items-center gap-4 mb-4">
-                          <div className="text-4xl font-extrabold text-[#191919]">
+                          <div className="text-4xl font-extrabold text-[#191919] dark:text-white">
                             {qStat.average ? qStat.average : "—"}
                           </div>
                           <div>
-                            <div className="text-xs font-semibold text-[#737373]">
+                            <div className="text-xs font-semibold text-[#737373] dark:text-[#a8a29e]">
                               Average Rating Score
                             </div>
-                            <div className="text-xs text-[#999]">Based on {totalForQ} ratings</div>
+                            <div className="text-xs text-[#999] dark:text-[#78716c]">Based on {totalForQ} ratings</div>
                           </div>
                         </div>
 
@@ -377,16 +380,16 @@ export default function FormResultsPage() {
 
                             return (
                               <div key={item.label} className="flex items-center gap-3 text-xs">
-                                <span className="w-12 text-right font-semibold text-[#555]">
+                                <span className="w-12 text-right font-semibold text-[#555] dark:text-[#d6d3d1]">
                                   {item.label} ★
                                 </span>
-                                <div className="flex-1 h-2 bg-[#f0f0ee] rounded-full overflow-hidden">
+                                <div className="flex-1 h-2 bg-[#f0f0ee] dark:bg-[#272421] rounded-full overflow-hidden">
                                   <div
                                     style={{ width: `${pct}%` }}
                                     className="h-full bg-[#f59e0b] rounded-full transition-all"
                                   />
                                 </div>
-                                <span className="w-14 text-right text-[#737373]">
+                                <span className="w-14 text-right text-[#737373] dark:text-[#a8a29e]">
                                   {item.count} ({pct}%)
                                 </span>
                               </div>
@@ -401,12 +404,12 @@ export default function FormResultsPage() {
                       qStat.kind === "long_text" ||
                       qStat.kind === "email" ||
                       qStat.kind === "number") && (
-                      <div className="text-xs text-[#737373] pt-1">
+                      <div className="text-xs text-[#737373] dark:text-[#a8a29e] pt-1">
                         <span>
                           Responses recorded. Switch to the{" "}
                           <button
                             onClick={() => setActiveTab("responses")}
-                            className="font-semibold text-[#0445af] hover:underline"
+                            className="font-semibold text-[#0445af] dark:text-sky-400 hover:underline cursor-pointer"
                           >
                             Responses tab
                           </button>{" "}
@@ -423,14 +426,14 @@ export default function FormResultsPage() {
 
         {/* TAB 2: RESPONSES TABLE */}
         {activeTab === "responses" && (
-          <div className="bg-white rounded-2xl border border-[#e6e6e4] shadow-xs overflow-hidden">
-            <div className="p-4 border-b border-[#e6e6e4] flex items-center justify-between">
-              <div className="text-xs font-bold uppercase tracking-wider text-[#737373]">
+          <div className="bg-white dark:bg-[#141414] rounded-2xl border border-[#e6e6e4] dark:border-[#272421] shadow-xs overflow-hidden">
+            <div className="p-4 border-b border-[#e6e6e4] dark:border-[#272421] flex items-center justify-between">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e]">
                 Submissions ({submissions.length})
               </div>
               <button
                 onClick={handleExportCsv}
-                className="text-xs text-[#0445af] font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-xs text-[#0445af] dark:text-sky-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
               >
                 <Download size={13} />
                 <span>Download as CSV</span>
@@ -438,9 +441,9 @@ export default function FormResultsPage() {
             </div>
 
             {submissions.length === 0 ? (
-              <div className="p-12 text-center text-[#737373]">
-                <FileSpreadsheet size={32} className="mx-auto mb-3 text-[#999]" />
-                <h3 className="font-semibold text-sm text-[#191919]">No responses yet</h3>
+              <div className="p-12 text-center text-[#737373] dark:text-[#a8a29e]">
+                <FileSpreadsheet size={32} className="mx-auto mb-3 text-[#999] dark:text-[#78716c]" />
+                <h3 className="font-semibold text-sm text-[#191919] dark:text-white">No responses yet</h3>
                 <p className="text-xs mt-1">
                   Share your public form link with respondents to collect feedback!
                 </p>
@@ -448,7 +451,7 @@ export default function FormResultsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#faf9f6] text-[#737373] uppercase font-bold border-b border-[#e6e6e4]">
+                  <thead className="bg-[#faf9f6] dark:bg-[#1c1a17] text-[#737373] dark:text-[#a8a29e] uppercase font-bold border-b border-[#e6e6e4] dark:border-[#272421]">
                     <tr>
                       <th className="px-6 py-3">#</th>
                       <th className="px-6 py-3">Submitted At</th>
@@ -456,21 +459,21 @@ export default function FormResultsPage() {
                       <th className="px-6 py-3 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#f0f0ee]">
+                  <tbody className="divide-y divide-[#f0f0ee] dark:divide-[#252220]">
                     {submissions.map((sub, idx) => (
                       <tr
                         key={sub.id}
                         onClick={() => setSelectedSubmissionId(sub.id)}
-                        className="hover:bg-[#faf9f6] transition-colors cursor-pointer"
+                        className="hover:bg-[#faf9f6] dark:hover:bg-[#1c1a17] transition-colors cursor-pointer"
                       >
-                        <td className="px-6 py-4 font-bold text-[#191919]">
+                        <td className="px-6 py-4 font-bold text-[#191919] dark:text-white">
                           #{submissions.length - idx}
                         </td>
-                        <td className="px-6 py-4 text-[#555] flex items-center gap-1.5">
-                          <Clock size={13} className="text-[#999]" />
+                        <td className="px-6 py-4 text-[#555] dark:text-[#d6d3d1] flex items-center gap-1.5">
+                          <Clock size={13} className="text-[#999] dark:text-[#78716c]" />
                           <span>{formatDate(sub.submitted_at)}</span>
                         </td>
-                        <td className="px-6 py-4 text-[#191919] font-medium max-w-md truncate">
+                        <td className="px-6 py-4 text-[#191919] dark:text-[#f3f4f6] font-medium max-w-md truncate">
                           {sub.preview}
                         </td>
                         <td className="px-6 py-4 text-right">
@@ -479,7 +482,7 @@ export default function FormResultsPage() {
                               e.stopPropagation();
                               setSelectedSubmissionId(sub.id);
                             }}
-                            className="text-xs font-semibold text-[#0445af] hover:underline cursor-pointer"
+                            className="text-xs font-semibold text-[#0445af] dark:text-sky-400 hover:underline cursor-pointer"
                           >
                             View details →
                           </button>
@@ -496,16 +499,16 @@ export default function FormResultsPage() {
 
       {/* Submission Detail Modal / Drawer */}
       {selectedSubmissionId && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] shadow-2xl border border-[#e6e6e4] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#141414] rounded-3xl max-w-2xl w-full max-h-[85vh] shadow-2xl border border-[#e6e6e4] dark:border-[#272421] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             {/* Modal Header */}
-            <div className="p-5 border-b border-[#e6e6e4] flex items-center justify-between shrink-0">
+            <div className="p-5 border-b border-[#e6e6e4] dark:border-[#272421] flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
-                <h2 className="text-base font-bold text-[#191919]">
+                <h2 className="text-base font-bold text-[#191919] dark:text-white">
                   Submission #{submissions.length - currentSubIndex}
                 </h2>
                 {submissionDetail && (
-                  <span className="text-xs text-[#737373]">
+                  <span className="text-xs text-[#737373] dark:text-[#a8a29e]">
                     {formatDate(submissionDetail.submitted_at)}
                   </span>
                 )}
@@ -516,7 +519,7 @@ export default function FormResultsPage() {
                 <button
                   onClick={handlePrevSub}
                   disabled={currentSubIndex <= 0}
-                  className="p-1 rounded-lg border border-[#e6e6e4] text-[#555] hover:bg-[#f6f5f1] disabled:opacity-30 cursor-pointer"
+                  className="p-1 rounded-lg border border-[#e6e6e4] dark:border-[#272421] text-[#555] dark:text-[#d6d3d1] hover:bg-[#f6f5f1] dark:hover:bg-[#201e1d] disabled:opacity-30 cursor-pointer"
                   title="Previous response"
                 >
                   <ChevronLeft size={16} />
@@ -524,14 +527,14 @@ export default function FormResultsPage() {
                 <button
                   onClick={handleNextSub}
                   disabled={currentSubIndex >= submissions.length - 1}
-                  className="p-1 rounded-lg border border-[#e6e6e4] text-[#555] hover:bg-[#f6f5f1] disabled:opacity-30 cursor-pointer"
+                  className="p-1 rounded-lg border border-[#e6e6e4] dark:border-[#272421] text-[#555] dark:text-[#d6d3d1] hover:bg-[#f6f5f1] dark:hover:bg-[#201e1d] disabled:opacity-30 cursor-pointer"
                   title="Next response"
                 >
                   <ChevronRight size={16} />
                 </button>
                 <button
                   onClick={() => setSelectedSubmissionId(null)}
-                  className="p-1 text-[#737373] hover:text-[#191919] rounded-lg ml-2 cursor-pointer"
+                  className="p-1 text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white rounded-lg ml-2 cursor-pointer"
                 >
                   <X size={18} />
                 </button>
@@ -541,23 +544,23 @@ export default function FormResultsPage() {
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto space-y-6 flex-1">
               {loadingDetail || !submissionDetail ? (
-                <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#737373]">
-                  <div className="w-6 h-6 border-2 border-[#191919] border-t-transparent rounded-full animate-spin" />
+                <div className="py-12 flex flex-col items-center justify-center gap-2 text-[#737373] dark:text-[#a8a29e]">
+                  <div className="w-6 h-6 border-2 border-[#191919] dark:border-white border-t-transparent rounded-full animate-spin" />
                   <span className="text-xs">Loading answers...</span>
                 </div>
               ) : (
                 submissionDetail.answers.map((ans, i) => (
                   <div key={ans.question_id || i} className="space-y-1.5">
-                    <div className="text-xs font-semibold text-[#737373] flex items-center gap-2">
-                      <span className="font-bold text-[#0445af]">{i + 1}.</span>
+                    <div className="text-xs font-semibold text-[#737373] dark:text-[#a8a29e] flex items-center gap-2">
+                      <span className="font-bold text-[#0445af] dark:text-sky-400">{i + 1}.</span>
                       <span>{ans.prompt || "Question"}</span>
                     </div>
 
-                    <div className="p-3.5 bg-[#faf9f6] rounded-xl border border-[#e6e6e4] text-sm font-medium text-[#191919]">
+                    <div className="p-3.5 bg-[#faf9f6] dark:bg-[#1a1816] rounded-xl border border-[#e6e6e4] dark:border-[#272421] text-sm font-medium text-[#191919] dark:text-white">
                       {ans.display_value ? (
                         <span>{ans.display_value}</span>
                       ) : (
-                        <span className="text-[#999] italic">No answer provided</span>
+                        <span className="text-[#999] dark:text-[#78716c] italic">No answer provided</span>
                       )}
                     </div>
                   </div>
@@ -566,13 +569,13 @@ export default function FormResultsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#f0f0ee] bg-[#faf9f6] flex items-center justify-between text-xs text-[#737373]">
+            <div className="p-4 border-t border-[#f0f0ee] dark:border-[#252220] bg-[#faf9f6] dark:bg-[#161514] flex items-center justify-between text-xs text-[#737373] dark:text-[#a8a29e]">
               <span>
                 Response {currentSubIndex + 1} of {submissions.length}
               </span>
               <button
                 onClick={() => setSelectedSubmissionId(null)}
-                className="px-4 py-1.5 bg-[#191919] text-white rounded-lg font-semibold hover:bg-[#333] transition-colors cursor-pointer"
+                className="px-4 py-1.5 bg-[#191919] dark:bg-white text-white dark:text-[#191919] rounded-lg font-semibold hover:bg-[#333] dark:hover:bg-[#e6e6e4] transition-colors cursor-pointer"
               >
                 Close
               </button>

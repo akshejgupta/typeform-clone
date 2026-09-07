@@ -23,6 +23,7 @@ import {
   Globe,
   Split,
   ChevronUp,
+  Plug,
 } from "lucide-react";
 import {
   DndContext,
@@ -46,6 +47,7 @@ import { api } from "@/lib/api";
 import type { FormDetail, Question, QuestionKind, QuestionUpdatePayload } from "@/lib/types";
 import { QUESTION_KINDS, kindMeta } from "@/lib/questions";
 import { useToast } from "@/components/toast";
+import { ThemeToggle } from "@/components/theme";
 
 // Sortable Question Row Component
 function SortableQuestionRow({
@@ -82,8 +84,8 @@ function SortableQuestionRow({
       onClick={onSelect}
       className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all border ${
         isSelected
-          ? "bg-white border-[#191919] shadow-sm text-[#191919]"
-          : "bg-white/60 border-transparent hover:bg-white hover:border-[#e6e6e4] text-[#555]"
+          ? "bg-white dark:bg-[#201e1d] border-[#191919] dark:border-[#a8a29e] shadow-sm text-[#191919] dark:text-white"
+          : "bg-white/60 dark:bg-[#161514] border-transparent hover:bg-white dark:hover:bg-[#201e1d] hover:border-[#e6e6e4] dark:hover:border-[#2e2a27] text-[#555] dark:text-[#a8a29e]"
       } ${isDragging ? "opacity-50 shadow-md" : ""}`}
     >
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -92,20 +94,20 @@ function SortableQuestionRow({
           {...attributes}
           {...listeners}
           onClick={(e) => e.stopPropagation()}
-          className="cursor-grab active:cursor-grabbing text-[#999] hover:text-[#191919] p-0.5 -ml-1"
+          className="cursor-grab active:cursor-grabbing text-[#999] hover:text-[#191919] dark:hover:text-white p-0.5 -ml-1"
           title="Drag to reorder"
         >
           <GripVertical size={14} />
         </button>
 
-        <span className="font-semibold text-[#888] w-4 text-center">{index + 1}</span>
+        <span className="font-semibold text-[#888] dark:text-[#78716c] w-4 text-center">{index + 1}</span>
 
-        <div className="w-6 h-6 rounded-md bg-[#f6f5f1] flex items-center justify-center text-[#191919] shrink-0">
+        <div className="w-6 h-6 rounded-md bg-[#f6f5f1] dark:bg-[#272421] flex items-center justify-center text-[#191919] dark:text-white shrink-0">
           <Icon size={13} />
         </div>
 
         <span className="truncate flex-1 font-medium">
-          {question.prompt || <span className="text-[#999] italic">{meta?.defaultPrompt || "Question"}</span>}
+          {question.prompt || <span className="text-[#999] dark:text-[#666] italic">{meta?.defaultPrompt || "Question"}</span>}
         </span>
 
         {question.required && (
@@ -119,14 +121,14 @@ function SortableQuestionRow({
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-1">
         <button
           onClick={onDuplicate}
-          className="p-1 rounded text-[#777] hover:text-[#191919] hover:bg-[#f0f0ee]"
+          className="p-1 rounded text-[#777] hover:text-[#191919] dark:hover:text-white hover:bg-[#f0f0ee] dark:hover:bg-[#2a2725]"
           title="Duplicate question"
         >
           <Copy size={13} />
         </button>
         <button
           onClick={onDelete}
-          className="p-1 rounded text-[#777] hover:text-[#dc2626] hover:bg-[#fee2e2]"
+          className="p-1 rounded text-[#777] hover:text-[#dc2626] hover:bg-[#fee2e2] dark:hover:bg-[#3b1212]"
           title="Delete question"
         >
           <Trash2 size={13} />
@@ -384,14 +386,14 @@ export default function FormBuilderPage() {
   const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/to/${form.public_slug}` : "";
 
   return (
-    <div className="h-screen flex flex-col bg-[#faf9f6] text-[#191919] overflow-hidden font-sans select-none">
+    <div className="h-screen flex flex-col bg-[#faf9f6] dark:bg-[#0c0a09] text-[#191919] dark:text-[#f3f4f6] overflow-hidden font-sans">
       {/* Top Navigation Bar */}
-      <header className="h-14 bg-white border-b border-[#e6e6e4] px-4 flex items-center justify-between shrink-0 z-30">
+      <header className="h-14 bg-white dark:bg-[#141414] border-b border-[#e6e6e4] dark:border-[#292524] px-4 flex items-center justify-between shrink-0 z-30">
         {/* Left: Back + Form Title */}
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/"
-            className="p-1.5 rounded-lg text-[#737373] hover:text-[#191919] hover:bg-[#f6f5f1] transition-colors"
+            className="p-1.5 rounded-lg text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white hover:bg-[#f6f5f1] dark:hover:bg-[#201e1d] transition-colors"
             title="Back to workspace"
           >
             <ArrowLeft size={18} />
@@ -403,43 +405,50 @@ export default function FormBuilderPage() {
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               onBlur={() => handleUpdateForm({ title: form.title.trim() || "Untitled typeform" })}
-              className="text-sm font-bold text-[#191919] bg-transparent border border-transparent hover:border-[#e6e6e4] focus:border-[#191919] rounded px-2 py-1 max-w-[240px] truncate focus:outline-none transition-colors"
+              className="text-sm font-bold text-[#191919] dark:text-white bg-transparent border border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-[#a8a29e] rounded px-2 py-1 max-w-[240px] truncate focus:outline-none transition-colors"
               title="Click to rename"
             />
 
             <span
               className={`text-[11px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1.5 ${
                 form.status === "published"
-                  ? "bg-[#e6f4ea] text-[#137333]"
-                  : "bg-[#f1f3f4] text-[#5f6368]"
+                  ? "bg-[#e6f4ea] dark:bg-emerald-950/50 text-[#137333] dark:text-emerald-400"
+                  : "bg-[#f1f3f4] dark:bg-[#201e1d] text-[#5f6368] dark:text-[#a8a29e]"
               }`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  form.status === "published" ? "bg-[#137333]" : "bg-[#5f6368]"
+                  form.status === "published" ? "bg-[#137333] dark:bg-emerald-400" : "bg-[#5f6368] dark:bg-[#78716c]"
                 }`}
               />
               {form.status === "published" ? "Published" : "Draft"}
             </span>
 
-            {saving && <span className="text-[11px] text-[#999] italic">Saving...</span>}
+            {saving && <span className="text-[11px] text-[#999] dark:text-[#78716c] italic">Saving...</span>}
           </div>
         </div>
 
         {/* Center: Tabs */}
-        <div className="hidden md:flex items-center gap-1 bg-[#f0f0ee] p-1 rounded-xl text-xs font-semibold">
-          <button className="px-3.5 py-1.5 rounded-lg bg-white text-[#191919] shadow-xs">
+        <div className="hidden md:flex items-center gap-1 bg-[#f0f0ee] dark:bg-[#1f1d1a] p-1 rounded-xl text-xs font-semibold">
+          <button className="px-3.5 py-1.5 rounded-lg bg-white dark:bg-[#2a2725] text-[#191919] dark:text-white shadow-xs">
             Create
           </button>
+          <Link
+            href="/integrations"
+            className="px-3.5 py-1.5 rounded-lg text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white transition-colors flex items-center gap-1.5"
+          >
+            <Plug size={13} />
+            <span>Connect</span>
+          </Link>
           <button
             onClick={() => setIsShareModalOpen(true)}
-            className="px-3.5 py-1.5 rounded-lg text-[#737373] hover:text-[#191919] transition-colors"
+            className="px-3.5 py-1.5 rounded-lg text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white transition-colors"
           >
             Share
           </button>
           <Link
             href={`/forms/${form.id}/results`}
-            className="px-3.5 py-1.5 rounded-lg text-[#737373] hover:text-[#191919] transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-1.5 rounded-lg text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white transition-colors flex items-center gap-1.5"
           >
             <BarChart2 size={13} />
             <span>Results</span>
@@ -448,13 +457,15 @@ export default function FormBuilderPage() {
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+
           {/* Design Toggle */}
           <button
             onClick={() => setActiveTab(activeTab === "design" ? "settings" : "design")}
             className={`p-2 rounded-lg border text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === "design"
-                ? "bg-[#191919] text-white border-[#191919]"
-                : "bg-white text-[#555] border-[#e6e6e4] hover:border-[#191919]"
+                ? "bg-[#191919] text-white border-[#191919] dark:bg-white dark:text-[#191919] dark:border-white"
+                : "bg-white dark:bg-[#1a1816] text-[#555] dark:text-[#d6d3d1] border-[#e6e6e4] dark:border-[#2e2a27] hover:border-[#191919] dark:hover:border-[#78716c]"
             }`}
             title="Design & Themes"
           >
@@ -469,7 +480,7 @@ export default function FormBuilderPage() {
               setPreviewAnswers({});
               setIsPreviewOpen(true);
             }}
-            className="p-2 rounded-lg bg-white border border-[#e6e6e4] hover:border-[#191919] text-xs font-medium text-[#555] hover:text-[#191919] flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="p-2 rounded-lg bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] hover:border-[#191919] dark:hover:border-[#78716c] text-xs font-medium text-[#555] dark:text-[#d6d3d1] hover:text-[#191919] dark:hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Interactive Live Preview"
           >
             <Eye size={15} />
@@ -479,7 +490,7 @@ export default function FormBuilderPage() {
           {/* Share Button */}
           <button
             onClick={() => setIsShareModalOpen(true)}
-            className="p-2 rounded-lg bg-white border border-[#e6e6e4] hover:border-[#191919] text-xs font-medium text-[#555] hover:text-[#191919] flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="p-2 rounded-lg bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] hover:border-[#191919] dark:hover:border-[#78716c] text-xs font-medium text-[#555] dark:text-[#d6d3d1] hover:text-[#191919] dark:hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <Share2 size={15} />
             <span className="hidden sm:inline">Share</span>
@@ -490,8 +501,8 @@ export default function FormBuilderPage() {
             onClick={handleTogglePublish}
             className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
               form.status === "published"
-                ? "bg-[#e6f4ea] text-[#137333] hover:bg-[#d2edd7] border border-[#a8dab5]"
-                : "bg-[#191919] text-white hover:bg-[#333]"
+                ? "bg-[#e6f4ea] dark:bg-emerald-950/60 text-[#137333] dark:text-emerald-400 hover:bg-[#d2edd7] dark:hover:bg-emerald-900/60 border border-[#a8dab5] dark:border-emerald-800"
+                : "bg-[#191919] text-white hover:bg-[#333] dark:bg-white dark:text-[#191919] dark:hover:bg-[#e6e6e4]"
             }`}
           >
             {form.status === "published" ? (
@@ -511,9 +522,9 @@ export default function FormBuilderPage() {
       {/* Builder 3-Column Layout */}
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT COLUMN: Outline & Question List */}
-        <aside className="w-72 bg-[#fbfbfa] border-r border-[#e6e6e4] flex flex-col shrink-0">
-          <div className="p-3 border-b border-[#e6e6e4] flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#737373]">
+        <aside className="w-72 bg-[#fbfbfa] dark:bg-[#121110] border-r border-[#e6e6e4] dark:border-[#292524] flex flex-col shrink-0">
+          <div className="p-3 border-b border-[#e6e6e4] dark:border-[#292524] flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e]">
               Outline ({form.questions.length})
             </span>
 
@@ -521,7 +532,7 @@ export default function FormBuilderPage() {
             <div className="relative">
               <button
                 onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
-                className="flex items-center gap-1 bg-[#191919] text-white px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-[#333] transition-colors cursor-pointer"
+                className="flex items-center gap-1 bg-[#191919] dark:bg-white text-white dark:text-[#191919] px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-[#333] dark:hover:bg-[#e6e6e4] transition-colors cursor-pointer"
               >
                 <Plus size={13} />
                 <span>Add</span>
@@ -529,8 +540,8 @@ export default function FormBuilderPage() {
 
               {/* Question Type Popover */}
               {isAddMenuOpen && (
-                <div className="absolute left-0 top-full mt-2 w-60 bg-white border border-[#e6e6e4] rounded-2xl shadow-xl p-2 z-40 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="px-2 py-1 text-[11px] font-bold uppercase text-[#999]">
+                <div className="absolute left-0 top-full mt-2 w-60 bg-white dark:bg-[#1c1a17] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-2xl shadow-xl p-2 z-40 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-2 py-1 text-[11px] font-bold uppercase text-[#999] dark:text-[#78716c]">
                     Choose question type
                   </div>
                   <div className="grid grid-cols-1 gap-0.5 mt-1 max-h-72 overflow-y-auto">
@@ -540,9 +551,9 @@ export default function FormBuilderPage() {
                         <button
                           key={item.kind}
                           onClick={() => handleAddQuestion(item.kind)}
-                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left text-xs font-medium hover:bg-[#f6f5f1] text-[#191919] transition-colors cursor-pointer"
+                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left text-xs font-medium hover:bg-[#f6f5f1] dark:hover:bg-[#272421] text-[#191919] dark:text-white transition-colors cursor-pointer"
                         >
-                          <div className="w-6 h-6 rounded bg-[#f0f0ee] flex items-center justify-center text-[#191919]">
+                          <div className="w-6 h-6 rounded bg-[#f0f0ee] dark:bg-[#272421] flex items-center justify-center text-[#191919] dark:text-white">
                             <Icon size={13} />
                           </div>
                           <div className="flex-1">
@@ -564,11 +575,11 @@ export default function FormBuilderPage() {
               onClick={() => setSelectedId("welcome")}
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all border ${
                 selectedId === "welcome"
-                  ? "bg-white border-[#191919] shadow-sm text-[#191919]"
-                  : "bg-white/60 border-transparent hover:bg-white hover:border-[#e6e6e4] text-[#555]"
+                  ? "bg-white dark:bg-[#201e1d] border-[#191919] dark:border-[#a8a29e] shadow-sm text-[#191919] dark:text-white"
+                  : "bg-white/60 dark:bg-[#161514] border-transparent hover:bg-white dark:hover:bg-[#201e1d] hover:border-[#e6e6e4] dark:hover:border-[#2e2a27] text-[#555] dark:text-[#a8a29e]"
               }`}
             >
-              <div className="w-6 h-6 rounded-md bg-[#f6f5f1] flex items-center justify-center text-[#191919] shrink-0">
+              <div className="w-6 h-6 rounded-md bg-[#f6f5f1] dark:bg-[#272421] flex items-center justify-center text-[#191919] dark:text-white shrink-0">
                 <Sparkles size={13} />
               </div>
               <span className="truncate font-semibold">Welcome Screen</span>
@@ -605,11 +616,11 @@ export default function FormBuilderPage() {
               onClick={() => setSelectedId("thankyou")}
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all border ${
                 selectedId === "thankyou"
-                  ? "bg-white border-[#191919] shadow-sm text-[#191919]"
-                  : "bg-white/60 border-transparent hover:bg-white hover:border-[#e6e6e4] text-[#555]"
+                  ? "bg-white dark:bg-[#201e1d] border-[#191919] dark:border-[#a8a29e] shadow-sm text-[#191919] dark:text-white"
+                  : "bg-white/60 dark:bg-[#161514] border-transparent hover:bg-white dark:hover:bg-[#201e1d] hover:border-[#e6e6e4] dark:hover:border-[#2e2a27] text-[#555] dark:text-[#a8a29e]"
               }`}
             >
-              <div className="w-6 h-6 rounded-md bg-[#f6f5f1] flex items-center justify-center text-[#191919] shrink-0">
+              <div className="w-6 h-6 rounded-md bg-[#f6f5f1] dark:bg-[#272421] flex items-center justify-center text-[#191919] dark:text-white shrink-0">
                 <CheckCircle2 size={13} />
               </div>
               <span className="truncate font-semibold">Thank You Screen</span>
@@ -618,12 +629,12 @@ export default function FormBuilderPage() {
         </aside>
 
         {/* CENTER COLUMN: Live Interactive Canvas (WYSIWYG) */}
-        <main className="flex-1 bg-[#f4f3ef] flex flex-col items-center justify-center p-8 overflow-y-auto relative">
-          <div className="max-w-2xl w-full bg-white rounded-3xl shadow-sm border border-[#e6e6e4] p-10 min-h-[440px] flex flex-col justify-between transition-all">
+        <main className="flex-1 bg-[#f4f3ef] dark:bg-[#0c0a09] flex flex-col items-center justify-center p-8 overflow-y-auto relative">
+          <div className="max-w-2xl w-full bg-white dark:bg-[#141414] rounded-3xl shadow-sm border border-[#e6e6e4] dark:border-[#272421] p-10 min-h-[440px] flex flex-col justify-between transition-all">
             {/* Case 1: Welcome Screen */}
             {selectedId === "welcome" && (
               <div className="space-y-6 my-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#999]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#999] dark:text-[#78716c]">
                   Welcome Screen
                 </span>
 
@@ -634,7 +645,7 @@ export default function FormBuilderPage() {
                     onChange={(e) => setForm({ ...form, welcome_title: e.target.value })}
                     onBlur={() => handleUpdateForm({ welcome_title: form.welcome_title })}
                     placeholder="Add a welcoming title..."
-                    className="w-full text-3xl font-bold text-[#191919] border-b-2 border-transparent hover:border-[#e6e6e4] focus:border-[#191919] pb-2 focus:outline-none transition-colors"
+                    className="w-full text-3xl font-bold text-[#191919] dark:text-white border-b-2 border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-white pb-2 focus:outline-none transition-colors bg-transparent"
                   />
                   <textarea
                     value={form.welcome_message}
@@ -642,7 +653,7 @@ export default function FormBuilderPage() {
                     onBlur={() => handleUpdateForm({ welcome_message: form.welcome_message })}
                     rows={2}
                     placeholder="Add description or instructions..."
-                    className="w-full mt-2 text-sm text-[#737373] resize-none border-b border-transparent hover:border-[#e6e6e4] focus:border-[#191919] pb-1 focus:outline-none transition-colors"
+                    className="w-full mt-2 text-sm text-[#737373] dark:text-[#a8a29e] resize-none border-b border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-white pb-1 focus:outline-none transition-colors bg-transparent"
                   />
                 </div>
 
@@ -663,7 +674,7 @@ export default function FormBuilderPage() {
               <div className="space-y-6 my-auto text-center">
                 <div
                   style={{ color: form.accent_color || "#0445af" }}
-                  className="w-16 h-16 rounded-full bg-[#f6f5f1] flex items-center justify-center mx-auto"
+                  className="w-16 h-16 rounded-full bg-[#f6f5f1] dark:bg-[#201e1d] flex items-center justify-center mx-auto"
                 >
                   <CheckCircle2 size={36} />
                 </div>
@@ -675,7 +686,7 @@ export default function FormBuilderPage() {
                     onChange={(e) => setForm({ ...form, thank_you_title: e.target.value })}
                     onBlur={() => handleUpdateForm({ thank_you_title: form.thank_you_title })}
                     placeholder="Thank you title..."
-                    className="w-full text-center text-3xl font-bold text-[#191919] border-b-2 border-transparent hover:border-[#e6e6e4] focus:border-[#191919] pb-2 focus:outline-none transition-colors"
+                    className="w-full text-center text-3xl font-bold text-[#191919] dark:text-white border-b-2 border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-white pb-2 focus:outline-none transition-colors bg-transparent"
                   />
                   <textarea
                     value={form.thank_you_message}
@@ -683,7 +694,7 @@ export default function FormBuilderPage() {
                     onBlur={() => handleUpdateForm({ thank_you_message: form.thank_you_message })}
                     rows={2}
                     placeholder="Thank you description..."
-                    className="w-full text-center mt-2 text-sm text-[#737373] resize-none border-b border-transparent hover:border-[#e6e6e4] focus:border-[#191919] pb-1 focus:outline-none transition-colors"
+                    className="w-full text-center mt-2 text-sm text-[#737373] dark:text-[#a8a29e] resize-none border-b border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-white pb-1 focus:outline-none transition-colors bg-transparent"
                   />
                 </div>
               </div>
@@ -698,7 +709,7 @@ export default function FormBuilderPage() {
                     {form.questions.findIndex((q) => q.id === currentQuestion.id) + 1} →
                   </span>
                   {currentQuestion.required && (
-                    <span className="text-xs text-[#dc2626] font-medium bg-[#fee2e2] px-2 py-0.5 rounded-full">
+                    <span className="text-xs text-[#dc2626] font-medium bg-[#fee2e2] dark:bg-rose-950/40 px-2 py-0.5 rounded-full">
                       Required
                     </span>
                   )}
@@ -713,7 +724,7 @@ export default function FormBuilderPage() {
                       handleUpdateQuestion(currentQuestion.id, { prompt: e.target.value })
                     }
                     placeholder="Type your question here..."
-                    className="w-full text-2xl font-bold text-[#191919] border-b border-transparent hover:border-[#e6e6e4] focus:border-[#191919] pb-1 focus:outline-none transition-colors"
+                    className="w-full text-2xl font-bold text-[#191919] dark:text-white border-b border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-white pb-1 focus:outline-none transition-colors bg-transparent"
                   />
                   <input
                     type="text"
@@ -722,7 +733,7 @@ export default function FormBuilderPage() {
                       handleUpdateQuestion(currentQuestion.id, { help_text: e.target.value })
                     }
                     placeholder="Add optional description or hint..."
-                    className="w-full text-xs text-[#737373] border-b border-transparent hover:border-[#e6e6e4] focus:border-[#191919] pb-1 focus:outline-none transition-colors"
+                    className="w-full text-xs text-[#737373] dark:text-[#a8a29e] border-b border-transparent hover:border-[#e6e6e4] dark:hover:border-[#383330] focus:border-[#191919] dark:focus:border-white pb-1 focus:outline-none transition-colors bg-transparent"
                   />
                 </div>
 
@@ -732,8 +743,8 @@ export default function FormBuilderPage() {
                   {(currentQuestion.kind === "short_text" ||
                     currentQuestion.kind === "email" ||
                     currentQuestion.kind === "number") && (
-                    <div className="border-b-2 border-[#cfcfcf] py-2">
-                      <span className="text-xl text-[#999]">
+                    <div className="border-b-2 border-[#cfcfcf] dark:border-[#383330] py-2">
+                      <span className="text-xl text-[#999] dark:text-[#666]">
                         {currentQuestion.placeholder ||
                           (currentQuestion.kind === "email"
                             ? "name@example.com"
@@ -746,8 +757,8 @@ export default function FormBuilderPage() {
 
                   {/* Long text */}
                   {currentQuestion.kind === "long_text" && (
-                    <div className="border-b-2 border-[#cfcfcf] py-2">
-                      <span className="text-base text-[#999] italic">
+                    <div className="border-b-2 border-[#cfcfcf] dark:border-[#383330] py-2">
+                      <span className="text-base text-[#999] dark:text-[#666] italic">
                         {currentQuestion.placeholder || "Type your multiline answer here..."}
                       </span>
                     </div>
@@ -759,9 +770,9 @@ export default function FormBuilderPage() {
                       {currentQuestion.choices.map((choice, idx) => (
                         <div
                           key={choice.id || idx}
-                          className="flex items-center gap-3 p-3 rounded-xl border border-[#e6e6e4] bg-[#fbfbfa] hover:border-[#191919] transition-all"
+                          className="flex items-center gap-3 p-3 rounded-xl border border-[#e6e6e4] dark:border-[#2e2a27] bg-[#fbfbfa] dark:bg-[#1a1816] hover:border-[#191919] dark:hover:border-[#78716c] transition-all"
                         >
-                          <span className="w-6 h-6 rounded-md bg-white border border-[#dcdcd8] flex items-center justify-center text-xs font-bold text-[#191919]">
+                          <span className="w-6 h-6 rounded-md bg-white dark:bg-[#272421] border border-[#dcdcd8] dark:border-[#383330] flex items-center justify-center text-xs font-bold text-[#191919] dark:text-white">
                             {String.fromCharCode(65 + idx)}
                           </span>
                           <input
@@ -775,7 +786,7 @@ export default function FormBuilderPage() {
                                 choices: newChoices.map((c) => ({ label: c.label })),
                               });
                             }}
-                            className="flex-1 text-sm bg-transparent focus:outline-none font-medium text-[#191919]"
+                            className="flex-1 text-sm bg-transparent focus:outline-none font-medium text-[#191919] dark:text-white"
                           />
                           {currentQuestion.choices.length > 1 && (
                             <button
@@ -785,7 +796,7 @@ export default function FormBuilderPage() {
                                   choices: newChoices.map((c) => ({ label: c.label })),
                                 });
                               }}
-                              className="text-[#999] hover:text-[#dc2626] p-1"
+                              className="text-[#999] dark:text-[#666] hover:text-[#dc2626] p-1"
                               title="Delete choice"
                             >
                               <Trash2 size={14} />
@@ -805,7 +816,7 @@ export default function FormBuilderPage() {
                             choices: newChoices.map((c) => ({ label: c.label })),
                           });
                         }}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0445af] hover:underline cursor-pointer pt-1"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0445af] dark:text-sky-400 hover:underline cursor-pointer pt-1"
                       >
                         <Plus size={14} />
                         <span>Add choice</span>
@@ -816,11 +827,11 @@ export default function FormBuilderPage() {
                   {/* Dropdown */}
                   {currentQuestion.kind === "dropdown" && (
                     <div className="space-y-2">
-                      <div className="p-3 rounded-xl border border-[#cfcfcf] bg-white text-sm text-[#737373] flex items-center justify-between">
+                      <div className="p-3 rounded-xl border border-[#cfcfcf] dark:border-[#2e2a27] bg-white dark:bg-[#1a1816] text-sm text-[#737373] dark:text-[#a8a29e] flex items-center justify-between">
                         <span>Select an option...</span>
                         <ChevronDown size={16} />
                       </div>
-                      <div className="text-xs text-[#737373] flex items-center gap-2">
+                      <div className="text-xs text-[#737373] dark:text-[#a8a29e] flex items-center gap-2">
                         <span>{currentQuestion.choices.length} options defined</span>
                         <span>•</span>
                         <button
@@ -833,7 +844,7 @@ export default function FormBuilderPage() {
                               choices: newChoices.map((c) => ({ label: c.label })),
                             });
                           }}
-                          className="text-[#0445af] hover:underline cursor-pointer"
+                          className="text-[#0445af] dark:text-sky-400 hover:underline cursor-pointer"
                         >
                           + Add option
                         </button>
@@ -847,9 +858,9 @@ export default function FormBuilderPage() {
                       {["Yes", "No"].map((choice, i) => (
                         <div
                           key={choice}
-                          className="flex-1 p-4 rounded-xl border border-[#e6e6e4] bg-[#fbfbfa] flex items-center justify-center gap-3 font-semibold text-sm hover:border-[#191919] transition-all cursor-pointer"
+                          className="flex-1 p-4 rounded-xl border border-[#e6e6e4] dark:border-[#2e2a27] bg-[#fbfbfa] dark:bg-[#1a1816] flex items-center justify-center gap-3 font-semibold text-sm hover:border-[#191919] dark:hover:border-[#78716c] text-[#191919] dark:text-white transition-all cursor-pointer"
                         >
-                          <span className="w-6 h-6 rounded-md bg-white border border-[#dcdcd8] flex items-center justify-center text-xs font-bold text-[#191919]">
+                          <span className="w-6 h-6 rounded-md bg-white dark:bg-[#272421] border border-[#dcdcd8] dark:border-[#383330] flex items-center justify-center text-xs font-bold text-[#191919] dark:text-white">
                             {i === 0 ? "Y" : "N"}
                           </span>
                           <span>{choice}</span>
@@ -864,7 +875,7 @@ export default function FormBuilderPage() {
                       {Array.from({ length: currentQuestion.rating_max || 5 }).map((_, i) => (
                         <div
                           key={i}
-                          className="w-12 h-12 rounded-xl border border-[#dcdcd8] bg-[#fbfbfa] hover:border-[#191919] hover:bg-white flex items-center justify-center font-bold text-sm text-[#191919] cursor-pointer transition-all"
+                          className="w-12 h-12 rounded-xl border border-[#dcdcd8] dark:border-[#2e2a27] bg-[#fbfbfa] dark:bg-[#1a1816] hover:border-[#191919] dark:hover:border-[#78716c] hover:bg-white dark:hover:bg-[#272421] flex items-center justify-center font-bold text-sm text-[#191919] dark:text-white cursor-pointer transition-all"
                         >
                           {i + 1}
                         </div>
@@ -889,15 +900,15 @@ export default function FormBuilderPage() {
         </main>
 
         {/* RIGHT COLUMN: Settings & Design Inspector */}
-        <aside className="w-80 bg-white border-l border-[#e6e6e4] flex flex-col shrink-0 overflow-y-auto">
+        <aside className="w-80 bg-white dark:bg-[#141414] border-l border-[#e6e6e4] dark:border-[#292524] flex flex-col shrink-0 overflow-y-auto">
           {/* Tabs */}
-          <div className="flex border-b border-[#e6e6e4] text-xs font-semibold">
+          <div className="flex border-b border-[#e6e6e4] dark:border-[#292524] text-xs font-semibold">
             <button
               onClick={() => setActiveTab("settings")}
               className={`flex-1 py-3 text-center border-b-2 transition-colors cursor-pointer ${
                 activeTab === "settings"
-                  ? "border-[#191919] text-[#191919]"
-                  : "border-transparent text-[#737373] hover:text-[#191919]"
+                  ? "border-[#191919] dark:border-white text-[#191919] dark:text-white"
+                  : "border-transparent text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white"
               }`}
             >
               Question Settings
@@ -906,8 +917,8 @@ export default function FormBuilderPage() {
               onClick={() => setActiveTab("design")}
               className={`flex-1 py-3 text-center border-b-2 transition-colors cursor-pointer ${
                 activeTab === "design"
-                  ? "border-[#191919] text-[#191919]"
-                  : "border-transparent text-[#737373] hover:text-[#191919]"
+                  ? "border-[#191919] dark:border-white text-[#191919] dark:text-white"
+                  : "border-transparent text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white"
               }`}
             >
               Design & Theme
@@ -919,7 +930,7 @@ export default function FormBuilderPage() {
             <div className="p-5 space-y-6">
               {/* Question Type Switcher */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1.5">
                   Question Type
                 </label>
                 <select
@@ -928,7 +939,7 @@ export default function FormBuilderPage() {
                     const nextKind = e.target.value as QuestionKind;
                     handleUpdateQuestion(currentQuestion.id, { kind: nextKind });
                   }}
-                  className="w-full px-3 py-2 bg-[#f6f5f1] border border-[#e6e6e4] rounded-lg text-xs font-medium text-[#191919] focus:outline-none focus:border-[#191919]"
+                  className="w-full px-3 py-2 bg-[#f6f5f1] dark:bg-[#1f1d1a] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs font-medium text-[#191919] dark:text-white focus:outline-none focus:border-[#191919] dark:focus:border-white"
                 >
                   {QUESTION_KINDS.map((k) => (
                     <option key={k.kind} value={k.kind}>
@@ -939,10 +950,10 @@ export default function FormBuilderPage() {
               </div>
 
               {/* Required Switch */}
-              <div className="flex items-center justify-between py-2 border-y border-[#f0f0ee]">
+              <div className="flex items-center justify-between py-2 border-y border-[#f0f0ee] dark:border-[#252220]">
                 <div>
-                  <div className="text-xs font-semibold text-[#191919]">Required</div>
-                  <div className="text-[11px] text-[#737373]">Respondent must answer</div>
+                  <div className="text-xs font-semibold text-[#191919] dark:text-white">Required</div>
+                  <div className="text-[11px] text-[#737373] dark:text-[#a8a29e]">Respondent must answer</div>
                 </div>
                 <button
                   type="button"
@@ -950,12 +961,14 @@ export default function FormBuilderPage() {
                     handleUpdateQuestion(currentQuestion.id, { required: !currentQuestion.required })
                   }
                   className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                    currentQuestion.required ? "bg-[#191919]" : "bg-[#dcdcd8]"
+                    currentQuestion.required ? "bg-[#191919] dark:bg-white" : "bg-[#dcdcd8] dark:bg-[#383330]"
                   }`}
                 >
                   <span
-                    className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
-                      currentQuestion.required ? "translate-x-5" : ""
+                    className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform ${
+                      currentQuestion.required
+                        ? "translate-x-5 bg-white dark:bg-[#141414]"
+                        : "bg-white"
                     }`}
                   />
                 </button>
@@ -966,7 +979,7 @@ export default function FormBuilderPage() {
                 currentQuestion.kind === "long_text" ||
                 currentQuestion.kind === "number") && (
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1.5">
                     Placeholder Text
                   </label>
                   <input
@@ -976,7 +989,7 @@ export default function FormBuilderPage() {
                       handleUpdateQuestion(currentQuestion.id, { placeholder: e.target.value })
                     }
                     placeholder="Enter placeholder..."
-                    className="w-full px-3 py-2 bg-white border border-[#e6e6e4] rounded-lg text-xs text-[#191919] focus:outline-none focus:border-[#191919]"
+                    className="w-full px-3 py-2 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs text-[#191919] dark:text-white focus:outline-none focus:border-[#191919] dark:focus:border-white"
                   />
                 </div>
               )}
@@ -985,7 +998,7 @@ export default function FormBuilderPage() {
               {currentQuestion.kind === "number" && (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1">
                       Min Value
                     </label>
                     <input
@@ -997,11 +1010,11 @@ export default function FormBuilderPage() {
                         })
                       }
                       placeholder="e.g. 0"
-                      className="w-full px-3 py-2 bg-white border border-[#e6e6e4] rounded-lg text-xs text-[#191919] focus:outline-none focus:border-[#191919]"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs text-[#191919] dark:text-white focus:outline-none focus:border-[#191919] dark:focus:border-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-1">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1">
                       Max Value
                     </label>
                     <input
@@ -1013,7 +1026,7 @@ export default function FormBuilderPage() {
                         })
                       }
                       placeholder="e.g. 100"
-                      className="w-full px-3 py-2 bg-white border border-[#e6e6e4] rounded-lg text-xs text-[#191919] focus:outline-none focus:border-[#191919]"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs text-[#191919] dark:text-white focus:outline-none focus:border-[#191919] dark:focus:border-white"
                     />
                   </div>
                 </div>
@@ -1022,7 +1035,7 @@ export default function FormBuilderPage() {
               {/* Rating Scale Max */}
               {currentQuestion.kind === "rating" && (
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1.5">
                     Rating Scale Max
                   </label>
                   <select
@@ -1030,7 +1043,7 @@ export default function FormBuilderPage() {
                     onChange={(e) =>
                       handleUpdateQuestion(currentQuestion.id, { rating_max: Number(e.target.value) })
                     }
-                    className="w-full px-3 py-2 bg-[#f6f5f1] border border-[#e6e6e4] rounded-lg text-xs font-medium text-[#191919]"
+                    className="w-full px-3 py-2 bg-[#f6f5f1] dark:bg-[#1f1d1a] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs font-medium text-[#191919] dark:text-white"
                   >
                     <option value={3}>3 Stars</option>
                     <option value={5}>5 Stars (Standard)</option>
@@ -1045,7 +1058,7 @@ export default function FormBuilderPage() {
                 currentQuestion.kind === "dropdown") && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#737373]">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e]">
                       Choices ({currentQuestion.choices.length})
                     </label>
                     <button
@@ -1059,7 +1072,7 @@ export default function FormBuilderPage() {
                           choices: newChoices.map((c) => ({ label: c.label })),
                         });
                       }}
-                      className="text-xs text-[#0445af] font-semibold hover:underline"
+                      className="text-xs text-[#0445af] dark:text-sky-400 font-semibold hover:underline"
                     >
                       + Add
                     </button>
@@ -1078,7 +1091,7 @@ export default function FormBuilderPage() {
                               choices: newChoices.map((c) => ({ label: c.label })),
                             });
                           }}
-                          className="flex-1 px-2.5 py-1.5 bg-white border border-[#e6e6e4] rounded-md text-xs text-[#191919] focus:outline-none focus:border-[#191919]"
+                          className="flex-1 px-2.5 py-1.5 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-md text-xs text-[#191919] dark:text-white focus:outline-none focus:border-[#191919] dark:focus:border-white"
                         />
                         {currentQuestion.choices.length > 1 && (
                           <button
@@ -1101,12 +1114,12 @@ export default function FormBuilderPage() {
               )}
 
               {/* Logic Jumps Placeholder */}
-              <div className="p-4 rounded-xl bg-[#faf9f6] border border-[#e6e6e4] space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#191919]">
-                  <Split size={14} className="text-[#0445af]" />
+              <div className="p-4 rounded-xl bg-[#faf9f6] dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#292524] space-y-2">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#191919] dark:text-white">
+                  <Split size={14} className="text-[#0445af] dark:text-sky-400" />
                   <span>Logic Jumps & Branching</span>
                 </div>
-                <p className="text-[11px] text-[#737373] leading-relaxed">
+                <p className="text-[11px] text-[#737373] dark:text-[#a8a29e] leading-relaxed">
                   Route respondents to specific questions based on their answers. Coming soon to Typeform clone!
                 </p>
               </div>
@@ -1117,7 +1130,7 @@ export default function FormBuilderPage() {
           {activeTab === "design" && (
             <div className="p-5 space-y-6">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-3">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-3">
                   Accent Color
                 </label>
                 <div className="grid grid-cols-3 gap-2.5">
@@ -1128,8 +1141,8 @@ export default function FormBuilderPage() {
                       onClick={() => handleUpdateForm({ accent_color: c.hex })}
                       className={`p-2 rounded-xl border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                         form.accent_color === c.hex
-                          ? "border-[#191919] bg-[#f6f5f1] shadow-xs"
-                          : "border-[#e6e6e4] hover:border-[#191919]"
+                          ? "border-[#191919] dark:border-white bg-[#f6f5f1] dark:bg-[#201e1d] shadow-xs"
+                          : "border-[#e6e6e4] dark:border-[#2e2a27] hover:border-[#191919] dark:hover:border-white"
                       }`}
                     >
                       <div
@@ -1138,20 +1151,20 @@ export default function FormBuilderPage() {
                       >
                         {form.accent_color === c.hex && <Check size={14} />}
                       </div>
-                      <span className="text-[10px] font-medium text-[#555]">{c.label}</span>
+                      <span className="text-[10px] font-medium text-[#555] dark:text-[#d6d3d1]">{c.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1.5">
                   Custom Hex Color
                 </label>
                 <div className="flex items-center gap-2">
                   <div
                     style={{ backgroundColor: form.accent_color || "#0445af" }}
-                    className="w-8 h-8 rounded-lg border border-[#e6e6e4] shrink-0"
+                    className="w-8 h-8 rounded-lg border border-[#e6e6e4] dark:border-[#2e2a27] shrink-0"
                   />
                   <input
                     type="text"
@@ -1159,7 +1172,7 @@ export default function FormBuilderPage() {
                     onChange={(e) => setForm({ ...form, accent_color: e.target.value })}
                     onBlur={() => handleUpdateForm({ accent_color: form.accent_color })}
                     placeholder="#0445AF"
-                    className="w-full px-3 py-1.5 bg-white border border-[#e6e6e4] rounded-lg text-xs font-mono text-[#191919] focus:outline-none focus:border-[#191919]"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs font-mono text-[#191919] dark:text-white focus:outline-none focus:border-[#191919] dark:focus:border-white"
                   />
                 </div>
               </div>
@@ -1170,16 +1183,16 @@ export default function FormBuilderPage() {
 
       {/* Share Modal */}
       {isShareModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[#e6e6e4] animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#161514] rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[#e6e6e4] dark:border-[#292524] animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Globe size={18} className="text-[#0445af]" />
-                <h2 className="text-lg font-bold text-[#191919]">Share your typeform</h2>
+                <Globe size={18} className="text-[#0445af] dark:text-sky-400" />
+                <h2 className="text-lg font-bold text-[#191919] dark:text-white">Share your typeform</h2>
               </div>
               <button
                 onClick={() => setIsShareModalOpen(false)}
-                className="text-[#737373] hover:text-[#191919] p-1 rounded-md"
+                className="text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white p-1 rounded-md cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -1189,8 +1202,8 @@ export default function FormBuilderPage() {
               <div
                 className={`p-4 rounded-xl border flex items-center justify-between ${
                   form.status === "published"
-                    ? "bg-[#e6f4ea] border-[#a8dab5] text-[#137333]"
-                    : "bg-[#fef7e0] border-[#f9df9b] text-[#b06000]"
+                    ? "bg-[#e6f4ea] dark:bg-emerald-950/40 border-[#a8dab5] dark:border-emerald-800 text-[#137333] dark:text-emerald-400"
+                    : "bg-[#fef7e0] dark:bg-amber-950/40 border-[#f9df9b] dark:border-amber-800 text-[#b06000] dark:text-amber-400"
                 }`}
               >
                 <div className="text-xs">
@@ -1207,14 +1220,14 @@ export default function FormBuilderPage() {
                 <button
                   type="button"
                   onClick={handleTogglePublish}
-                  className="px-3 py-1.5 bg-white rounded-lg text-xs font-bold text-[#191919] border border-current hover:bg-[#faf9f6] transition-colors cursor-pointer shrink-0 ml-3"
+                  className="px-3 py-1.5 bg-white dark:bg-[#201e1d] rounded-lg text-xs font-bold text-[#191919] dark:text-white border border-current hover:bg-[#faf9f6] dark:hover:bg-[#272421] transition-colors cursor-pointer shrink-0 ml-3"
                 >
                   {form.status === "published" ? "Unpublish" : "Publish now"}
                 </button>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#737373] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e] mb-1.5">
                   Public share link
                 </label>
                 <div className="flex items-center gap-2">
@@ -1222,7 +1235,7 @@ export default function FormBuilderPage() {
                     type="text"
                     readOnly
                     value={shareUrl}
-                    className="flex-1 px-3 py-2 bg-[#f6f5f1] border border-[#e6e6e4] rounded-lg text-xs text-[#191919] font-mono focus:outline-none"
+                    className="flex-1 px-3 py-2 bg-[#f6f5f1] dark:bg-[#1f1d1a] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs text-[#191919] dark:text-white font-mono focus:outline-none"
                   />
                   <button
                     type="button"
@@ -1230,7 +1243,7 @@ export default function FormBuilderPage() {
                       navigator.clipboard.writeText(shareUrl);
                       pushToast("Link copied to clipboard!");
                     }}
-                    className="px-4 py-2 bg-[#191919] text-white rounded-lg text-xs font-semibold hover:bg-[#333] transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+                    className="px-4 py-2 bg-[#191919] dark:bg-white text-white dark:text-[#191919] rounded-lg text-xs font-semibold hover:bg-[#333] dark:hover:bg-[#e6e6e4] transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
                   >
                     <Copy size={13} />
                     <span>Copy</span>
@@ -1244,7 +1257,7 @@ export default function FormBuilderPage() {
                     href={`/to/${form.public_slug}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs font-semibold text-[#0445af] hover:underline flex items-center gap-1"
+                    className="text-xs font-semibold text-[#0445af] dark:text-sky-400 hover:underline flex items-center gap-1"
                   >
                     <span>Open in new tab</span>
                     <ExternalLink size={12} />
@@ -1253,11 +1266,11 @@ export default function FormBuilderPage() {
               )}
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-[#f0f0ee]">
+            <div className="flex justify-end pt-4 border-t border-[#f0f0ee] dark:border-[#252220]">
               <button
                 type="button"
                 onClick={() => setIsShareModalOpen(false)}
-                className="px-4 py-2 text-sm font-semibold bg-[#191919] text-white rounded-lg hover:bg-[#333] transition-colors cursor-pointer"
+                className="px-4 py-2 text-sm font-semibold bg-[#191919] dark:bg-white text-white dark:text-[#191919] rounded-lg hover:bg-[#333] dark:hover:bg-[#e6e6e4] transition-colors cursor-pointer"
               >
                 Done
               </button>
@@ -1269,18 +1282,18 @@ export default function FormBuilderPage() {
       {/* Fullscreen In-Builder Live Preview Modal */}
       {isPreviewOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 md:p-8">
-          <div className="bg-[#faf9f6] rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl border border-[#e6e6e4] flex flex-col overflow-hidden relative animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-[#faf9f6] dark:bg-[#121110] rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl border border-[#e6e6e4] dark:border-[#292524] flex flex-col overflow-hidden relative animate-in fade-in zoom-in-95 duration-150">
             {/* Top Bar of Preview */}
-            <div className="h-12 bg-white border-b border-[#e6e6e4] px-4 flex items-center justify-between shrink-0">
+            <div className="h-12 bg-white dark:bg-[#161514] border-b border-[#e6e6e4] dark:border-[#292524] px-4 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#737373]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#737373] dark:text-[#a8a29e]">
                   Interactive Preview
                 </span>
-                <span className="text-xs text-[#999]">• Responses will not be saved</span>
+                <span className="text-xs text-[#999] dark:text-[#78716c]">• Responses will not be saved</span>
               </div>
               <button
                 onClick={() => setIsPreviewOpen(false)}
-                className="p-1.5 text-[#737373] hover:text-[#191919] hover:bg-[#f0f0ee] rounded-lg cursor-pointer"
+                className="p-1.5 text-[#737373] dark:text-[#a8a29e] hover:text-[#191919] dark:hover:text-white hover:bg-[#f0f0ee] dark:hover:bg-[#24211e] rounded-lg cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -1291,8 +1304,8 @@ export default function FormBuilderPage() {
               {/* Step 0: Welcome Screen */}
               {previewStep === 0 && (
                 <div className="max-w-md w-full space-y-6 text-center animate-in fade-in duration-200">
-                  <h1 className="text-3xl font-bold text-[#191919]">{form.welcome_title}</h1>
-                  <p className="text-sm text-[#737373] leading-relaxed">{form.welcome_message}</p>
+                  <h1 className="text-3xl font-bold text-[#191919] dark:text-white">{form.welcome_title}</h1>
+                  <p className="text-sm text-[#737373] dark:text-[#a8a29e] leading-relaxed">{form.welcome_message}</p>
                   <button
                     onClick={() => setPreviewStep(1)}
                     style={{ backgroundColor: form.accent_color || "#0445af" }}
@@ -1315,11 +1328,11 @@ export default function FormBuilderPage() {
                       <div className="text-sm font-semibold" style={{ color: form.accent_color || "#0445af" }}>
                         {previewStep} →
                       </div>
-                      <h2 className="text-2xl font-bold text-[#191919]">
+                      <h2 className="text-2xl font-bold text-[#191919] dark:text-white">
                         {q.prompt || qMeta.defaultPrompt}
                         {q.required && <span className="text-[#dc2626] ml-1">*</span>}
                       </h2>
-                      {q.help_text && <p className="text-xs text-[#737373]">{q.help_text}</p>}
+                      {q.help_text && <p className="text-xs text-[#737373] dark:text-[#a8a29e]">{q.help_text}</p>}
 
                       {/* Input mock */}
                       <div className="py-2">
@@ -1331,7 +1344,7 @@ export default function FormBuilderPage() {
                               setPreviewAnswers({ ...previewAnswers, [q.id]: e.target.value })
                             }
                             placeholder={q.placeholder || "Type your answer here..."}
-                            className="w-full border-b-2 border-[#191919] py-2 text-xl focus:outline-none bg-transparent"
+                            className="w-full border-b-2 border-[#191919] dark:border-white py-2 text-xl focus:outline-none bg-transparent text-[#191919] dark:text-white"
                             autoFocus
                             onKeyDown={(e) => {
                               if (e.key === "Enter") setPreviewStep(previewStep + 1);
@@ -1345,7 +1358,7 @@ export default function FormBuilderPage() {
                               setPreviewAnswers({ ...previewAnswers, [q.id]: e.target.value })
                             }
                             placeholder={q.placeholder || "Type your answer here..."}
-                            className="w-full border-b-2 border-[#191919] py-2 text-lg focus:outline-none bg-transparent resize-none"
+                            className="w-full border-b-2 border-[#191919] dark:border-white py-2 text-lg focus:outline-none bg-transparent resize-none text-[#191919] dark:text-white"
                             autoFocus
                           />
                         ) : q.kind === "multiple_choice" ? (
@@ -1360,11 +1373,11 @@ export default function FormBuilderPage() {
                                 }}
                                 className={`w-full p-3 rounded-xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                                   currentVal === c.id
-                                    ? "border-[#191919] bg-white font-semibold shadow-xs"
-                                    : "border-[#e6e6e4] bg-[#fbfbfa] hover:border-[#191919]"
+                                    ? "border-[#191919] dark:border-white bg-white dark:bg-[#201e1d] font-semibold text-[#191919] dark:text-white shadow-xs"
+                                    : "border-[#e6e6e4] dark:border-[#2e2a27] bg-[#fbfbfa] dark:bg-[#1a1816] text-[#191919] dark:text-[#d6d3d1] hover:border-[#191919] dark:hover:border-[#78716c]"
                                 }`}
                               >
-                                <span className="w-6 h-6 rounded-md bg-white border border-[#dcdcd8] flex items-center justify-center text-xs font-bold">
+                                <span className="w-6 h-6 rounded-md bg-white dark:bg-[#272421] border border-[#dcdcd8] dark:border-[#383330] flex items-center justify-center text-xs font-bold text-[#191919] dark:text-white">
                                   {String.fromCharCode(65 + i)}
                                 </span>
                                 <span className="text-sm">{c.label}</span>
@@ -1383,11 +1396,11 @@ export default function FormBuilderPage() {
                                 }}
                                 className={`flex-1 p-4 rounded-xl border flex items-center justify-center gap-3 font-semibold text-sm transition-all cursor-pointer ${
                                   currentVal === (choice === "Yes")
-                                    ? "border-[#191919] bg-white shadow-xs"
-                                    : "border-[#e6e6e4] bg-[#fbfbfa] hover:border-[#191919]"
+                                    ? "border-[#191919] dark:border-white bg-white dark:bg-[#201e1d] text-[#191919] dark:text-white shadow-xs"
+                                    : "border-[#e6e6e4] dark:border-[#2e2a27] bg-[#fbfbfa] dark:bg-[#1a1816] text-[#191919] dark:text-[#d6d3d1] hover:border-[#191919] dark:hover:border-[#78716c]"
                                 }`}
                               >
-                                <span className="w-6 h-6 rounded-md bg-white border border-[#dcdcd8] flex items-center justify-center text-xs font-bold">
+                                <span className="w-6 h-6 rounded-md bg-white dark:bg-[#272421] border border-[#dcdcd8] dark:border-[#383330] flex items-center justify-center text-xs font-bold text-[#191919] dark:text-white">
                                   {i === 0 ? "Y" : "N"}
                                 </span>
                                 <span>{choice}</span>
@@ -1406,8 +1419,8 @@ export default function FormBuilderPage() {
                                 }}
                                 className={`w-12 h-12 rounded-xl border flex items-center justify-center font-bold text-sm cursor-pointer transition-all ${
                                   currentVal === i + 1
-                                    ? "bg-[#191919] text-white border-[#191919]"
-                                    : "border-[#dcdcd8] bg-[#fbfbfa] hover:border-[#191919]"
+                                    ? "bg-[#191919] dark:bg-white text-white dark:text-[#191919] border-[#191919] dark:border-white"
+                                    : "border-[#dcdcd8] dark:border-[#2e2a27] bg-[#fbfbfa] dark:bg-[#1a1816] text-[#191919] dark:text-white hover:border-[#191919] dark:hover:border-[#78716c]"
                                 }`}
                               >
                                 {i + 1}
@@ -1421,7 +1434,7 @@ export default function FormBuilderPage() {
                               setPreviewAnswers({ ...previewAnswers, [q.id]: e.target.value });
                               setTimeout(() => setPreviewStep(previewStep + 1), 200);
                             }}
-                            className="w-full p-3 bg-white border border-[#cfcfcf] rounded-xl text-sm"
+                            className="w-full p-3 bg-white dark:bg-[#1a1816] border border-[#cfcfcf] dark:border-[#2e2a27] text-[#191919] dark:text-white rounded-xl text-sm"
                           >
                             <option value="">Select an option...</option>
                             {q.choices.map((c) => (
@@ -1442,7 +1455,7 @@ export default function FormBuilderPage() {
                           <span>OK</span>
                           <Check size={14} />
                         </button>
-                        <span className="text-[11px] text-[#737373]">press Enter ↵</span>
+                        <span className="text-[11px] text-[#737373] dark:text-[#a8a29e]">press Enter ↵</span>
                       </div>
                     </div>
                   );
@@ -1454,18 +1467,18 @@ export default function FormBuilderPage() {
                 <div className="max-w-md w-full space-y-6 text-center animate-in fade-in duration-200">
                   <div
                     style={{ color: form.accent_color || "#0445af" }}
-                    className="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto shadow-sm"
+                    className="w-16 h-16 rounded-full bg-white dark:bg-[#201e1d] flex items-center justify-center mx-auto shadow-sm"
                   >
                     <CheckCircle2 size={36} />
                   </div>
-                  <h2 className="text-3xl font-bold text-[#191919]">{form.thank_you_title}</h2>
-                  <p className="text-sm text-[#737373] leading-relaxed">{form.thank_you_message}</p>
+                  <h2 className="text-3xl font-bold text-[#191919] dark:text-white">{form.thank_you_title}</h2>
+                  <p className="text-sm text-[#737373] dark:text-[#a8a29e] leading-relaxed">{form.thank_you_message}</p>
                   <button
                     onClick={() => {
                       setPreviewStep(0);
                       setPreviewAnswers({});
                     }}
-                    className="px-4 py-2 bg-white border border-[#e6e6e4] rounded-lg text-xs font-semibold text-[#191919] hover:bg-[#f6f5f1] transition-colors cursor-pointer"
+                    className="px-4 py-2 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs font-semibold text-[#191919] dark:text-white hover:bg-[#f6f5f1] dark:hover:bg-[#24211e] transition-colors cursor-pointer"
                   >
                     Restart preview
                   </button>
@@ -1474,19 +1487,19 @@ export default function FormBuilderPage() {
             </div>
 
             {/* Bottom Controls */}
-            <div className="h-12 bg-white border-t border-[#e6e6e4] px-4 flex items-center justify-between text-xs text-[#737373]">
+            <div className="h-12 bg-white dark:bg-[#161514] border-t border-[#e6e6e4] dark:border-[#292524] px-4 flex items-center justify-between text-xs text-[#737373] dark:text-[#a8a29e]">
               <div className="flex items-center gap-1">
                 <button
                   disabled={previewStep <= 0}
                   onClick={() => setPreviewStep(Math.max(0, previewStep - 1))}
-                  className="p-1 rounded hover:bg-[#f0f0ee] disabled:opacity-30 cursor-pointer"
+                  className="p-1 rounded hover:bg-[#f0f0ee] dark:hover:bg-[#24211e] disabled:opacity-30 cursor-pointer"
                 >
                   <ChevronUp size={16} />
                 </button>
                 <button
                   disabled={previewStep > form.questions.length}
                   onClick={() => setPreviewStep(previewStep + 1)}
-                  className="p-1 rounded hover:bg-[#f0f0ee] disabled:opacity-30 cursor-pointer"
+                  className="p-1 rounded hover:bg-[#f0f0ee] dark:hover:bg-[#24211e] disabled:opacity-30 cursor-pointer"
                 >
                   <ChevronDown size={16} />
                 </button>
