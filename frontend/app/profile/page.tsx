@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   User,
@@ -20,6 +20,7 @@ import {
 import { Navbar } from "@/components/navbar";
 import { useTheme } from "@/components/theme";
 import { useToast } from "@/components/toast";
+import { getStoredUser } from "@/lib/auth";
 
 type TabId = "profile" | "appearance" | "team" | "api" | "billing";
 
@@ -36,6 +37,14 @@ export default function ProfilePage() {
   const [bio, setBio] = useState(
     "Building conversational experiences and research surveys for digital products."
   );
+
+  useEffect(() => {
+    const user = getStoredUser();
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, []);
 
   // Team Members State
   const [members, setMembers] = useState([

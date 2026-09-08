@@ -18,6 +18,7 @@ import {
 import { Wordmark } from "@/components/wordmark";
 import { useToast } from "@/components/toast";
 import { useTheme } from "@/components/theme";
+import { getStoredUser, setStoredUser } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -54,18 +55,18 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-      // Simulate authenticating
       await new Promise((resolve) => setTimeout(resolve, 600));
 
+      const existingUser = getStoredUser();
       const userData = {
-        name: mode === "signup" ? fullName : "Alex Rivera",
+        name: mode === "signup" ? fullName.trim() : existingUser?.name || email.trim().split("@")[0],
         email: email.trim(),
         role: "Workspace Owner",
         token: `tf_token_${Date.now()}`,
       };
 
-      localStorage.setItem("tf-user", JSON.stringify(userData));
-      pushToast(mode === "signup" ? "Account created successfully! Welcome to Typeform." : "Welcome back, Alex!");
+      setStoredUser(userData);
+      pushToast(mode === "signup" ? "Account created successfully! Welcome to Typeform." : `Welcome back, ${userData.name}!`);
       router.push("/");
     } catch {
       setError("Authentication failed. Please try again.");

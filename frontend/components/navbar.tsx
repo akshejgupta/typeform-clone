@@ -18,6 +18,7 @@ import {
 import { useTheme } from "@/components/theme";
 import { Wordmark } from "@/components/wordmark";
 import { useToast } from "@/components/toast";
+import { clearStoredUser, getStoredUser, type StoredUser } from "@/lib/auth";
 
 export function Navbar({
   onCreateClick,
@@ -31,7 +32,12 @@ export function Navbar({
   const { theme, toggleTheme } = useTheme();
   const pushToast = useToast();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<StoredUser | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setUser(getStoredUser());
+  }, [pathname]);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -51,7 +57,7 @@ export function Navbar({
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("tf-user");
+    clearStoredUser();
     pushToast("Signed out successfully");
     setMenuOpen(false);
     router.push("/login");
@@ -127,7 +133,12 @@ export function Navbar({
               className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl border border-[#e6e6e4] dark:border-[#2e2e2e] bg-white dark:bg-[#1a1a1a] hover:border-[#191919] dark:hover:border-[#555] transition-all cursor-pointer shadow-xs"
             >
               <div className="w-7 h-7 rounded-lg bg-[#0445af] text-white font-bold flex items-center justify-center text-xs shadow-xs">
-                AR
+                {(user?.name || "User")
+                  .split(" ")
+                  .map((part) => part[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase()}
               </div>
               <ChevronDown size={14} className="text-[#737373] dark:text-[#a3a3a3]" />
             </button>
@@ -138,14 +149,14 @@ export function Navbar({
                 {/* Header Profile Info */}
                 <div className="p-3 border-b border-[#f0f0ee] dark:border-[#2a2a2a]">
                   <div className="font-bold text-sm text-[#191919] dark:text-white">
-                    Alex Rivera
+                    {user?.name || "User"}
                   </div>
                   <div className="text-[#737373] dark:text-[#a3a3a3] truncate">
-                    alex.rivera@studio.co
+                    {user?.email || "Not signed in"}
                   </div>
                   <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#f0f0ee] dark:bg-[#282828] text-[#191919] dark:text-[#eee] text-[10px] font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    Pro Plan • Workspace Owner
+                    Pro Plan • {user?.role || "Workspace Owner"}
                   </div>
                 </div>
 
