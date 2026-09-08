@@ -76,6 +76,12 @@ export default function PublicFillPage() {
     ? form.questions[step - 1]
     : null;
 
+  const advanceFromQuestion = useCallback((question: Question) => {
+    if (!form || !question.next_question_id) return step + 1;
+    const targetIndex = form.questions.findIndex((item) => item.id === question.next_question_id);
+    return targetIndex >= 0 ? targetIndex + 1 : step + 1;
+  }, [form, step]);
+
   // Auto-focus input on step change
   useEffect(() => {
     setValidationError(null);
@@ -108,8 +114,8 @@ export default function PublicFillPage() {
         }
         setValidationError(null);
 
-        // Check if last question
-        if (step === form.questions.length) {
+        const nextStep = advanceFromQuestion(currentQuestion);
+        if (nextStep > form.questions.length) {
           // Submit to backend
           try {
             setSubmitting(true);
@@ -129,11 +135,11 @@ export default function PublicFillPage() {
           }
         } else {
           setDirection(1);
-          setStep((prev) => prev + 1);
+          setStep(nextStep);
         }
       }
     },
-    [form, step, currentQuestion, answers]
+    [form, step, currentQuestion, answers, advanceFromQuestion]
   );
 
   // Move back

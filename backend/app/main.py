@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import inspect, text
 
 from app.config import settings
 from app.database import Base, SessionLocal, engine
@@ -12,6 +13,9 @@ from app.seed import seed_if_empty
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    if "next_question_id" not in {column["name"] for column in inspect(engine).get_columns("questions")}:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE questions ADD COLUMN next_question_id VARCHAR(36)"))
     db = SessionLocal()
     try:
         seed_if_empty(db)

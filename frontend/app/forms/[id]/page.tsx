@@ -1113,15 +1113,33 @@ export default function FormBuilderPage() {
                 </div>
               )}
 
-              {/* Logic Jumps Placeholder */}
               <div className="p-4 rounded-xl bg-[#faf9f6] dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#292524] space-y-2">
                 <div className="flex items-center gap-2 text-xs font-semibold text-[#191919] dark:text-white">
                   <Split size={14} className="text-[#0445af] dark:text-sky-400" />
                   <span>Logic Jumps & Branching</span>
                 </div>
                 <p className="text-[11px] text-[#737373] dark:text-[#a8a29e] leading-relaxed">
-                  Route respondents to specific questions based on their answers. Coming soon to Typeform clone!
+                  After this question, continue to a specific question or follow the normal order.
                 </p>
+                <select
+                  value={currentQuestion.next_question_id ?? ""}
+                  onChange={(e) =>
+                    handleUpdateQuestion(currentQuestion.id, {
+                      next_question_id: e.target.value || null,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-white dark:bg-[#1a1816] border border-[#e6e6e4] dark:border-[#2e2a27] rounded-lg text-xs text-[#191919] dark:text-white"
+                >
+                  <option value="">Next question in order</option>
+                  {form.questions
+                    .filter((question) => question.id !== currentQuestion.id)
+                    .sort((a, b) => a.position - b.position)
+                    .map((question) => (
+                      <option key={question.id} value={question.id}>
+                        {question.position + 1}. {question.prompt || "Untitled question"}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
           )}

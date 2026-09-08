@@ -123,6 +123,7 @@ def duplicate_form(form_id: str, db: Session = Depends(get_db)):
             rating_max=question.rating_max,
             number_min=question.number_min,
             number_max=question.number_max,
+            next_question_id=question.next_question_id,
         )
         db.add(q)
         db.flush()
@@ -167,6 +168,7 @@ def add_question(form_id: str, body: QuestionIn, db: Session = Depends(get_db)):
         rating_max=body.rating_max,
         number_min=body.number_min,
         number_max=body.number_max,
+        next_question_id=body.next_question_id,
     )
     db.add(question)
     db.flush()

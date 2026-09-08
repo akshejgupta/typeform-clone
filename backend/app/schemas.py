@@ -30,6 +30,7 @@ class QuestionIn(BaseModel):
     rating_max: int = 5
     number_min: float | None = None
     number_max: float | None = None
+    next_question_id: str | None = None
     choices: list[ChoiceIn] = Field(default_factory=list)
 
 
@@ -42,6 +43,7 @@ class QuestionUpdate(BaseModel):
     rating_max: int | None = None
     number_min: float | None = None
     number_max: float | None = None
+    next_question_id: str | None = None
     choices: list[ChoiceIn] | None = None
 
 
@@ -57,6 +59,7 @@ class QuestionOut(BaseModel):
     rating_max: int
     number_min: float | None
     number_max: float | None
+    next_question_id: str | None
     choices: list[ChoiceOut]
 
     model_config = {"from_attributes": True}

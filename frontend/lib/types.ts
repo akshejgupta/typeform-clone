@@ -28,6 +28,7 @@ export type Question = {
   rating_max: number;
   number_min: number | null;
   number_max: number | null;
+  next_question_id: string | null;
   choices: Choice[];
 };
 

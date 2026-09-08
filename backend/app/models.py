@@ -85,6 +85,7 @@ class Question(Base):
     rating_max: Mapped[int] = mapped_column(Integer, default=5)
     number_min: Mapped[float | None] = mapped_column(Float, nullable=True)
     number_max: Mapped[float | None] = mapped_column(Float, nullable=True)
+    next_question_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
 
     form: Mapped[Form] = relationship(back_populates="questions")
     choices: Mapped[list[Choice]] = relationship(
