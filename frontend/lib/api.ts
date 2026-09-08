@@ -1,4 +1,5 @@
 import type { AnswerPayload, FormDetail, FormStats, FormSummary, Question, QuestionUpdatePayload, SubmissionDetail, SubmissionListItem } from "./types";
+import type { StoredUser } from "./auth";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -22,6 +23,16 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  register: (full_name: string, email: string, password: string) =>
+    request<StoredUser>("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ full_name, email, password }),
+    }),
+  login: (email: string, password: string) =>
+    request<StoredUser>("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    }),
   listForms: () => request<FormSummary[]>("/api/forms"),
   createForm: (title?: string) => request<FormDetail>("/api/forms", { method: "POST", body: JSON.stringify({ title: title ?? "Untitled typeform" }) }),
   getForm: (id: string) => request<FormDetail>(`/api/forms/${id}`),

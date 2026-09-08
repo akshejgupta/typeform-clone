@@ -18,7 +18,8 @@ import {
 import { Wordmark } from "@/components/wordmark";
 import { useToast } from "@/components/toast";
 import { useTheme } from "@/components/theme";
-import { getStoredUser, setStoredUser } from "@/lib/auth";
+import { setStoredUser } from "@/lib/auth";
+import { api } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -57,14 +58,9 @@ export default function LoginPage() {
       setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 600));
 
-      const existingUser = getStoredUser();
-      const userData = {
-        name: mode === "signup" ? fullName.trim() : existingUser?.name || email.trim().split("@")[0],
-        email: email.trim(),
-        role: "Workspace Owner",
-        token: `tf_token_${Date.now()}`,
-      };
-
+      const userData = mode === "signup"
+        ? await api.register(fullName.trim(), email.trim(), password)
+        : await api.login(email.trim(), password);
       setStoredUser(userData);
       pushToast(mode === "signup" ? "Account created successfully! Welcome to Typeform." : `Welcome back, ${userData.name}!`);
       router.push("/");

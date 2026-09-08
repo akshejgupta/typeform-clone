@@ -165,3 +165,16 @@ class QuestionStat(BaseModel):
 class FormStats(BaseModel):
     total_submissions: int
     questions: list[QuestionStat]
+
+
+class AuthCredentials(BaseModel):
+    email: str
+    password: str = Field(min_length=6)
+    full_name: str | None = None
+
+
+class UserOut(BaseModel):
+    name: str
+    email: str
+    role: str = "Workspace Owner"
+    token: str
